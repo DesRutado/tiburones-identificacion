@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Artículos — Identificación de Tiburones</title>
+  <meta name="description" content="Artículos, guías y curiosidades sobre tiburones. Taxonomía, conservación, distribución y mucho más de la mano de Guillermo Carranza Hidalgo." />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=Crimson+Pro:ital,wght@0,300;0,400;1,300;1,400&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean-deep:   #131e27;
+      --ocean-mid:    #1e3040;
+      --ocean-light:  #2a4558;
+      --teal:         #3a6272;
+      --cream:        #dce6ea;
+      --cream-light:  #edf3f5;
+      --accent:       #8faab8;
+      --accent-muted: #6a8fa0;
+      --white:        #f2f7f9;
+      --fin-dark:     #3a4f5e;
+      --slate:        #b8cdd6;
+      --wave-line:    #d5d1b8;
+      --off-white:    #f7fafb;
+      --text-dark:    #131e27;
+      --text-mid:     #2a4558;
+      --text-muted:   #6a8fa0;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--off-white);
+      color: var(--text-dark);
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(26,44,61,0.95), transparent);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--slate);
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      text-decoration: none;
+    }
+    .nav-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid rgba(184,205,214,0.2);
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      color: var(--cream);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    .nav-links a:hover { opacity: 1; }
+
+    /* ─── HERO COMPACTO ─── */
+    .hero {
+      height: 42vh;
+      min-height: 320px;
+      position: relative;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg svg { width: 100%; height: 100%; }
+
+    @keyframes waveShift {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-2%); }
+    }
+    .wave-anim  { animation: waveShift 10s ease-in-out infinite alternate; }
+    .wave-anim2 { animation: waveShift 14s ease-in-out infinite alternate-reverse; }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      text-align: center;
+      padding: 4rem 2rem 2rem;
+    }
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.35em;
+      text-transform: uppercase;
+      color: var(--slate);
+      opacity: 0.75;
+      margin-bottom: 1rem;
+      animation: fadeUp 0.8s ease 0.1s both;
+    }
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2.5rem, 6vw, 5rem);
+      font-weight: 900;
+      color: var(--cream-light);
+      line-height: 1;
+      letter-spacing: -0.02em;
+      animation: fadeUp 0.8s ease 0.2s both;
+    }
+    .hero-title em {
+      font-style: italic;
+      color: var(--wave-line);
+    }
+
+    /* ─── MAIN LAYOUT ─── */
+    .blog-main {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 4rem 2rem 6rem;
+      display: grid;
+      grid-template-columns: 1fr 300px;
+      gap: 4rem;
+      align-items: start;
+    }
+
+    /* ─── POST FEATURED (primero grande) ─── */
+    .post-featured {
+      grid-column: 1 / -1;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      background: var(--white);
+      border: 1px solid rgba(19,30,39,0.07);
+      overflow: hidden;
+      margin-bottom: 1rem;
+      transition: box-shadow 0.3s;
+    }
+    .post-featured:hover {
+      box-shadow: 0 12px 40px rgba(19,30,39,0.1);
+    }
+    .post-featured-visual {
+      background: var(--ocean-mid);
+      min-height: 360px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .post-featured-visual svg {
+      width: 100%; height: 100%;
+      position: absolute;
+      inset: 0;
+    }
+    .post-featured-visual .visual-label {
+      position: relative;
+      z-index: 2;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--slate);
+      opacity: 0.5;
+    }
+    .post-featured-body {
+      padding: 3.5rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.2rem;
+    }
+    .post-tag {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .post-tag::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--text-muted);
+    }
+    .post-featured-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(1.6rem, 3vw, 2.4rem);
+      font-weight: 700;
+      line-height: 1.15;
+      color: var(--text-dark);
+    }
+    .post-featured-excerpt {
+      font-size: 1.05rem;
+      line-height: 1.75;
+      color: var(--text-mid);
+      opacity: 0.8;
+    }
+    .post-meta {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .post-meta span { opacity: 0.6; }
+    .read-more {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--ocean-deep);
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding-bottom: 2px;
+      border-bottom: 1px solid rgba(19,30,39,0.2);
+      transition: gap 0.2s, border-color 0.2s;
+      width: fit-content;
+      margin-top: 0.5rem;
+    }
+    .read-more:hover { gap: 1rem; border-color: var(--ocean-deep); }
+    .read-more::after { content: '→'; }
+
+    /* ─── POSTS GRID ─── */
+    .posts-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1.5rem;
+    }
+
+    .post-card {
+      background: var(--white);
+      border: 1px solid rgba(19,30,39,0.07);
+      overflow: hidden;
+      transition: box-shadow 0.3s, transform 0.3s;
+      display: flex;
+      flex-direction: column;
+    }
+    .post-card:hover {
+      box-shadow: 0 8px 30px rgba(19,30,39,0.1);
+      transform: translateY(-3px);
+    }
+    .post-card-visual {
+      height: 180px;
+      background: var(--ocean-deep);
+      position: relative;
+      overflow: hidden;
+      flex-shrink: 0;
+    }
+    /* Each card gets a different teal shade */
+    .post-card:nth-child(1) .post-card-visual { background: #5c6f65; }
+    .post-card:nth-child(2) .post-card-visual { background: #374d4a; }
+    .post-card:nth-child(3) .post-card-visual { background: #4c6664; }
+    .post-card:nth-child(4) .post-card-visual { background: #516c62; }
+
+    .card-visual-icon {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0.12;
+    }
+    .card-visual-icon svg { width: 80px; height: 80px; }
+
+    .post-card-body {
+      padding: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      flex: 1;
+    }
+    .post-card-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.2rem;
+      font-weight: 700;
+      line-height: 1.25;
+      color: var(--text-dark);
+    }
+    .post-card-excerpt {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      color: var(--text-mid);
+      opacity: 0.75;
+      flex: 1;
+    }
+    .post-card-footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(19,30,39,0.06);
+      margin-top: auto;
+    }
+
+    /* ─── SIDEBAR ─── */
+    .sidebar {
+      position: sticky;
+      top: 96px;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+    .sidebar-block {
+      background: var(--white);
+      border: 1px solid rgba(19,30,39,0.07);
+      padding: 2rem;
+    }
+    .sidebar-title {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(19,30,39,0.07);
+    }
+    .sidebar-categories {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+    }
+    .sidebar-cat {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.8rem 0;
+      border-bottom: 1px solid rgba(19,30,39,0.05);
+      text-decoration: none;
+      transition: padding-left 0.2s;
+    }
+    .sidebar-cat:hover { padding-left: 0.5rem; }
+    .sidebar-cat span:first-child {
+      font-family: 'Crimson Pro', serif;
+      font-size: 1rem;
+      color: var(--text-dark);
+    }
+    .sidebar-cat-count {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      color: var(--text-muted);
+      background: var(--off-white);
+      padding: 0.2rem 0.5rem;
+    }
+    .sidebar-recent {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+    .sidebar-recent-item {
+      display: flex;
+      flex-direction: column;
+      gap: 0.3rem;
+      text-decoration: none;
+      padding-bottom: 1.2rem;
+      border-bottom: 1px solid rgba(19,30,39,0.05);
+    }
+    .sidebar-recent-item:last-child { border-bottom: none; padding-bottom: 0; }
+    .sidebar-recent-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.95rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      line-height: 1.3;
+      transition: color 0.2s;
+    }
+    .sidebar-recent-item:hover .sidebar-recent-title { color: var(--ocean-light); }
+    .sidebar-recent-date {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.58rem;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+    }
+
+    /* About block en sidebar */
+    .sidebar-about {
+      text-align: center;
+      padding: 2rem;
+    }
+    .sidebar-about img {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      object-fit: cover;
+      margin-bottom: 1rem;
+      border: 2px solid rgba(184,205,214,0.3);
+    }
+    .sidebar-about-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text-dark);
+      margin-bottom: 0.5rem;
+    }
+    .sidebar-about-bio {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--text-muted);
+    }
+
+    /* ─── PAGINACIÓN ─── */
+    .pagination {
+      grid-column: 1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      padding-top: 3rem;
+      border-top: 1px solid rgba(19,30,39,0.08);
+      margin-top: 2rem;
+    }
+    .page-btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.1em;
+      padding: 0.7rem 1rem;
+      border: 1px solid rgba(19,30,39,0.15);
+      background: none;
+      color: var(--text-muted);
+      cursor: pointer;
+      transition: all 0.2s;
+      text-decoration: none;
+    }
+    .page-btn:hover, .page-btn.active {
+      background: var(--ocean-deep);
+      color: var(--cream-light);
+      border-color: var(--ocean-deep);
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--ocean-deep);
+      padding: 2.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(232,223,200,0.06);
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--slate);
+      opacity: 0.6;
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--cream);
+      opacity: 0.3;
+    }
+    .footer-ig {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--slate);
+      text-decoration: none;
+      opacity: 0.55;
+      transition: opacity 0.3s;
+    }
+    .footer-ig:hover { opacity: 1; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(20px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 900px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { display: none; }
+      .blog-main { grid-template-columns: 1fr; padding: 2rem 1.5rem 4rem; gap: 2rem; }
+      .post-featured { grid-template-columns: 1fr; }
+      .post-featured-visual { min-height: 220px; }
+      .post-featured-body { padding: 2rem; }
+      .posts-grid { grid-template-columns: 1fr; }
+      .sidebar { position: static; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <a href="index.html" class="nav-logo">
+      <img src="img3.webp" alt="Logo" class="nav-avatar" />
+      Identificación de Tiburones
+    </a>
+    <ul class="nav-links">
+      <li><a href="index.html#libro">El Libro</a></li>
+      <li><a href="index.html#contenido">Contenido</a></li>
+      <li><a href="blog-tiburones.html" class="active">Artículos</a></li>
+      <li><a href="index.html#autor">Autor</a></li>
+      <li><a href="index.html#adquirir">Adquirir</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO COMPACTO -->
+  <section class="hero">
+    <div class="hero-bg">
+      <svg viewBox="0 0 1440 400" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"  stop-color="#1a3844"/>
+            <stop offset="100%" stop-color="#405d68"/>
+          </linearGradient>
+        </defs>
+        <rect width="1440" height="400" fill="url(#skyG)"/>
+        <!-- Olas compactas -->
+        <g class="wave-anim2">
+          <path d="M-60,260 Q-20,230 20,260 Q60,290 100,260 Q140,230 180,260 Q220,290 260,260 Q300,230 340,260 Q380,290 420,260 Q460,230 500,260 Q540,290 580,260 Q620,230 660,260 Q700,290 740,260 Q780,230 820,260 Q860,290 900,260 Q940,230 980,260 Q1020,290 1060,260 Q1100,230 1140,260 Q1180,290 1220,260 Q1260,230 1300,260 Q1340,290 1380,260 Q1420,230 1460,260 L1460,400 L-60,400 Z" fill="#5c6f65"/>
+          <path d="M-60,260 Q-20,230 20,260 Q60,290 100,260 Q140,230 180,260 Q220,290 260,260 Q300,230 340,260 Q380,290 420,260 Q460,230 500,260 Q540,290 580,260 Q620,230 660,260 Q700,290 740,260 Q780,230 820,260 Q860,290 900,260 Q940,230 980,260 Q1020,290 1060,260 Q1100,230 1140,260 Q1180,290 1220,260 Q1260,230 1300,260 Q1340,290 1380,260 Q1420,230 1460,260" fill="none" stroke="#d5d1b8" stroke-width="1.5" opacity="0.3"/>
+        </g>
+        <g class="wave-anim">
+          <path d="M-40,295 Q0,265 40,295 Q80,325 120,295 Q160,265 200,295 Q240,325 280,295 Q320,265 360,295 Q400,325 440,295 Q480,265 520,295 Q560,325 600,295 Q640,265 680,295 Q720,325 760,295 Q800,265 840,295 Q880,325 920,295 Q960,265 1000,295 Q1040,325 1080,295 Q1120,265 1160,295 Q1200,325 1240,295 Q1280,265 1320,295 Q1360,325 1400,295 Q1440,265 1480,295 L1480,400 L-40,400 Z" fill="#374d4a"/>
+          <path d="M-40,295 Q0,265 40,295 Q80,325 120,295 Q160,265 200,295 Q240,325 280,295 Q320,265 360,295 Q400,325 440,295 Q480,265 520,295 Q560,325 600,295 Q640,265 680,295 Q720,325 760,295 Q800,265 840,295 Q880,325 920,295 Q960,265 1000,295 Q1040,325 1080,295 Q1120,265 1160,295 Q1200,325 1240,295 Q1280,265 1320,295 Q1360,325 1400,295 Q1440,265 1480,295" fill="none" stroke="#d5d1b8" stroke-width="1.5" opacity="0.4"/>
+        </g>
+        <g class="wave-anim2">
+          <path d="M-20,330 Q20,300 60,330 Q100,360 140,330 Q180,300 220,330 Q260,360 300,330 Q340,300 380,330 Q420,360 460,330 Q500,300 540,330 Q580,360 620,330 Q660,300 700,330 Q740,360 780,330 Q820,300 860,330 Q900,360 940,330 Q980,300 1020,330 Q1060,360 1100,330 Q1140,300 1180,330 Q1220,360 1260,330 Q1300,300 1340,330 Q1380,360 1420,330 Q1460,300 1500,330 L1500,400 L-20,400 Z" fill="#5c7d6f"/>
+          <path d="M-20,330 Q20,300 60,330 Q100,360 140,330 Q180,300 220,330 Q260,360 300,330 Q340,300 380,330 Q420,360 460,330 Q500,300 540,330 Q580,360 620,330 Q660,300 700,330 Q740,360 780,330 Q820,300 860,330 Q900,360 940,330 Q980,300 1020,330 Q1060,360 1100,330 Q1140,300 1180,330 Q1220,360 1260,330 Q1300,300 1340,330 Q1380,360 1420,330 Q1460,300 1500,330" fill="none" stroke="#d5d1b8" stroke-width="2" opacity="0.5"/>
+        </g>
+        <g class="wave-anim">
+          <path d="M-30,365 Q10,335 50,365 Q90,395 130,365 Q170,335 210,365 Q250,395 290,365 Q330,335 370,365 Q410,395 450,365 Q490,335 530,365 Q570,395 610,365 Q650,335 690,365 Q730,395 770,365 Q810,335 850,365 Q890,395 930,365 Q970,335 1010,365 Q1050,395 1090,365 Q1130,335 1170,365 Q1210,395 1250,365 Q1290,335 1330,365 Q1370,395 1410,365 Q1450,335 1490,365 L1490,400 L-30,400 Z" fill="#3c585a"/>
+          <path d="M-30,365 Q10,335 50,365 Q90,395 130,365 Q170,335 210,365 Q250,395 290,365 Q330,335 370,365 Q410,395 450,365 Q490,335 530,365 Q570,395 610,365 Q650,335 690,365 Q730,395 770,365 Q810,335 850,365 Q890,395 930,365 Q970,335 1010,365 Q1050,395 1090,365 Q1130,335 1170,365 Q1210,395 1250,365 Q1290,335 1330,365 Q1370,395 1410,365 Q1450,335 1490,365" fill="none" stroke="#d5d1b8" stroke-width="2" opacity="0.6"/>
+        </g>
+      </svg>
+    </div>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Guillermo Carranza Hidalgo</p>
+      <h1 class="hero-title">Artículos <em>&</em> Guías</h1>
+    </div>
+  </section>
+
+  <!-- CONTENIDO PRINCIPAL -->
+  <main class="blog-main">
+
+    <!-- POST DESTACADO -->
+    <article class="post-featured">
+      <div class="post-featured-visual">
+        <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
+          <rect width="600" height="400" fill="#1e3d50"/>
+          <g opacity="0.15">
+            <path d="M-30,220 Q30,180 90,220 Q150,260 210,220 Q270,180 330,220 Q390,260 450,220 Q510,180 570,220 Q630,260 690,220 L690,400 L-30,400 Z" fill="#4a8e8e"/>
+            <path d="M-30,260 Q30,220 90,260 Q150,300 210,260 Q270,220 330,260 Q390,300 450,260 Q510,220 570,260 L570,400 L-30,400 Z" fill="#2a5060"/>
+            <path d="M-30,300 Q30,260 90,300 Q150,340 210,300 Q270,260 330,300 Q390,340 450,300 Q510,260 570,300 L570,400 L-30,400 Z" fill="#1e3040"/>
+          </g>
+          <!-- Fin silueta -->
+          <path d="M300,80 C297,110 288,145 272,180 C256,215 238,245 220,268 C240,264 262,262 280,265 C287,266 294,268 300,269 C306,268 313,266 320,265 C338,262 360,264 380,268 C362,245 344,215 328,180 C312,145 303,110 300,80 Z" fill="#3a5566" opacity="0.5"/>
+        </svg>
+      </div>
+      <div class="post-featured-body">
+        <span class="post-tag">Taxonomía</span>
+        <h2 class="post-featured-title">Los 8 órdenes de tiburones: una guía completa para entender su clasificación</h2>
+        <p class="post-featured-excerpt">La clasificación taxonómica de los tiburones es más compleja de lo que parece. Desde los Hexanchiformes, con sus características branquias adicionales, hasta los Carcharhiniformes, el grupo más diverso con más de 270 especies, cada orden tiene características únicas que los distinguen.</p>
+        <div class="post-meta">
+          <span>15 enero 2025</span>
+          <span>·</span>
+          <span>8 min lectura</span>
+        </div>
+        <a href="post-tiburones.html" class="read-more">Leer artículo</a>
+      </div>
+    </article>
+
+    <!-- COLUMNA PRINCIPAL: grid de posts -->
+    <div>
+      <div class="posts-grid">
+
+        <article class="post-card">
+          <div class="post-card-visual">
+            <div class="card-visual-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="9"/>
+                <path d="M12 3c-2.5 4-2.5 14 0 18"/>
+                <path d="M12 3c2.5 4 2.5 14 0 18"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+              </svg>
+            </div>
+          </div>
+          <div class="post-card-body">
+            <span class="post-tag">Distribución</span>
+            <h3 class="post-card-title">¿Dónde viven realmente los tiburones de aguas profundas?</h3>
+            <p class="post-card-excerpt">Más del 50% de las especies de tiburones habitan por debajo de los 200 metros. Exploramos los hábitats de las especies más desconocidas del océano.</p>
+            <div class="post-card-footer">
+              <div class="post-meta"><span>3 feb 2025</span><span>·</span><span>6 min</span></div>
+              <a href="post-tiburones.html" class="read-more">Leer</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="post-card">
+          <div class="post-card-visual">
+            <div class="card-visual-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 2L3 6.5v6C3 17.7 7 21.5 12 23c5-1.5 9-5.3 9-10.5v-6z"/>
+              </svg>
+            </div>
+          </div>
+          <div class="post-card-body">
+            <span class="post-tag">Conservación</span>
+            <h3 class="post-card-title">Estado IUCN 2024: qué especies de tiburones están en peligro crítico</h3>
+            <p class="post-card-excerpt">Actualizamos el estado de conservación de las 518 especies del libro con los últimos datos de la Lista Roja de la IUCN publicados en 2024.</p>
+            <div class="post-card-footer">
+              <div class="post-meta"><span>18 feb 2025</span><span>·</span><span>10 min</span></div>
+              <a href="post-tiburones.html" class="read-more">Leer</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="post-card">
+          <div class="post-card-visual">
+            <div class="card-visual-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="10.5" cy="10.5" r="7.5"/>
+                <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+              </svg>
+            </div>
+          </div>
+          <div class="post-card-body">
+            <span class="post-tag">Identificación</span>
+            <h3 class="post-card-title">Cómo diferenciar el tiburón toro del tiburón tigre en campo</h3>
+            <p class="post-card-excerpt">Dos de las especies más confundidas por buceadores y pescadores. Aquí las claves diagnósticas definitivas: dentición, aletas y patrones de color.</p>
+            <div class="post-card-footer">
+              <div class="post-meta"><span>5 mar 2025</span><span>·</span><span>7 min</span></div>
+              <a href="post-tiburones.html" class="read-more">Leer</a>
+            </div>
+          </div>
+        </article>
+
+        <article class="post-card">
+          <div class="post-card-visual">
+            <div class="card-visual-icon">
+              <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 7v14"/>
+                <path d="M12 7C9.5 5.5 5 5.5 2 7v14c3-1.5 7.5-1.5 10 0"/>
+                <path d="M12 7c2.5-1.5 7-1.5 10 0v14c-3-1.5-7.5-1.5-10 0"/>
+              </svg>
+            </div>
+          </div>
+          <div class="post-card-body">
+            <span class="post-tag">Curiosidades</span>
+            <h3 class="post-card-title">Las 10 especies de tiburones más desconocidas de los océanos</h3>
+            <p class="post-card-excerpt">El tiburón linterna, el tiburón bolsillo y otras especies raramente avistadas que muy pocos conocen pero que fascinan a los especialistas.</p>
+            <div class="post-card-footer">
+              <div class="post-meta"><span>20 mar 2025</span><span>·</span><span>5 min</span></div>
+              <a href="post-tiburones.html" class="read-more">Leer</a>
+            </div>
+          </div>
+        </article>
+
+      </div>
+
+      <!-- PAGINACIÓN -->
+      <div class="pagination">
+        <a href="#" class="page-btn active">1</a>
+        <a href="#" class="page-btn">2</a>
+        <a href="#" class="page-btn">3</a>
+        <a href="#" class="page-btn">→</a>
+      </div>
+    </div>
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar">
+
+      <div class="sidebar-block sidebar-about">
+        <img src="img3.webp" alt="Logo Identificación de Tiburones" />
+        <div class="sidebar-about-name">Guillermo Carranza Hidalgo</div>
+        <p class="sidebar-about-bio">Naturalista especializado en elasmobranquios. Autor de la guía de identificación de tiburones más completa en español.</p>
+      </div>
+
+      <div class="sidebar-block">
+        <div class="sidebar-title">Categorías</div>
+        <div class="sidebar-categories">
+          <a href="#" class="sidebar-cat">
+            <span>Taxonomía</span>
+            <span class="sidebar-cat-count">12</span>
+          </a>
+          <a href="#" class="sidebar-cat">
+            <span>Conservación</span>
+            <span class="sidebar-cat-count">8</span>
+          </a>
+          <a href="#" class="sidebar-cat">
+            <span>Distribución</span>
+            <span class="sidebar-cat-count">6</span>
+          </a>
+          <a href="#" class="sidebar-cat">
+            <span>Identificación</span>
+            <span class="sidebar-cat-count">15</span>
+          </a>
+          <a href="#" class="sidebar-cat">
+            <span>Curiosidades</span>
+            <span class="sidebar-cat-count">9</span>
+          </a>
+          <a href="#" class="sidebar-cat">
+            <span>Guías de campo</span>
+            <span class="sidebar-cat-count">4</span>
+          </a>
+        </div>
+      </div>
+
+      <div class="sidebar-block">
+        <div class="sidebar-title">Artículos recientes</div>
+        <div class="sidebar-recent">
+          <a href="post-tiburones.html" class="sidebar-recent-item">
+            <span class="sidebar-recent-title">Los 8 órdenes de tiburones explicados</span>
+            <span class="sidebar-recent-date">15 enero 2025</span>
+          </a>
+          <a href="post-tiburones.html" class="sidebar-recent-item">
+            <span class="sidebar-recent-title">Tiburones de aguas profundas: lo que no sabías</span>
+            <span class="sidebar-recent-date">3 febrero 2025</span>
+          </a>
+          <a href="post-tiburones.html" class="sidebar-recent-item">
+            <span class="sidebar-recent-title">Estado IUCN 2024: especies en peligro crítico</span>
+            <span class="sidebar-recent-date">18 febrero 2025</span>
+          </a>
+          <a href="post-tiburones.html" class="sidebar-recent-item">
+            <span class="sidebar-recent-title">Tiburón toro vs tiburón tigre: diferencias clave</span>
+            <span class="sidebar-recent-date">5 marzo 2025</span>
+          </a>
+        </div>
+      </div>
+
+    </aside>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer>
+    <a href="index.html" class="footer-logo">
+      <img src="img3.webp" alt="Logo" class="nav-avatar" />
+      Identificación de Tiburones
+    </a>
+    <a href="https://instagram.com/identificaciondetiburones" class="footer-ig" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="2" y="2" width="20" height="20" rx="5"/>
+        <circle cx="12" cy="12" r="5"/>
+        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+      </svg>
+      @identificaciondetiburones
+    </a>
+    <div class="footer-copy">© 2025 Guillermo Carranza Hidalgo</div>
+  </footer>
+
+
+</body>
+</html>

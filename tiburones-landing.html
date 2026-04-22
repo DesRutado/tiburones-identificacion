@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Identificación de Tiburones</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Crimson+Pro:ital,wght@0,300;0,400;1,300&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean-deep:   #131e27;
+      --ocean-mid:    #1e3040;
+      --ocean-light:  #2a4558;
+      --teal:         #3a6272;
+      --cream:        #dce6ea;
+      --cream-light:  #edf3f5;
+      --accent:       #8faab8;
+      --accent-muted: #6a8fa0;
+      --white:        #f2f7f9;
+      --fin-dark:     #3a4f5e;
+      --slate:        #b8cdd6;
+      --wave-line:    #d5d1b8;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ocean-deep);
+      color: var(--cream);
+      font-family: 'Crimson Pro', Georgia, serif;
+      font-weight: 300;
+      overflow-x: hidden;
+    }
+
+    /* ─── NAV ─── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      padding: 1.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: linear-gradient(to bottom, rgba(26,44,61,0.95), transparent);
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.85rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--slate);
+      opacity: 0.9;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .nav-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+      border: 1px solid rgba(184,205,214,0.2);
+    }
+    .nav-links {
+      display: flex;
+      gap: 2.5rem;
+      list-style: none;
+    }
+    .nav-links a {
+      font-family: 'Crimson Pro', serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.08em;
+      color: var(--cream);
+      text-decoration: none;
+      opacity: 0.7;
+      transition: opacity 0.3s;
+    }
+    .nav-links a:hover { opacity: 1; }
+
+    /* ─── HERO ─── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-rows: 1fr auto;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Full illustrated SVG background */
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+    }
+    .hero-bg svg { width: 100%; height: 100%; }
+
+    @keyframes cloudDrift {
+      0%   { transform: translateX(0px); }
+      100% { transform: translateX(8px); }
+    }
+    @keyframes waveShift {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-2%); }
+    }
+    .wave-anim { animation: waveShift 10s ease-in-out infinite alternate; }
+    .wave-anim2 { animation: waveShift 14s ease-in-out infinite alternate-reverse; }
+    .cloud-r { animation: cloudDrift 22s ease-in-out infinite alternate; }
+    .cloud-l { animation: cloudDrift 28s ease-in-out infinite alternate-reverse; }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      text-align: center;
+      padding: 7rem 2rem 0;
+      gap: 1.2rem;
+    }
+
+    .hero-eyebrow {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--slate);
+      opacity: 0.8;
+      animation: fadeUp 1s ease 0.2s both;
+    }
+
+    .hero-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3rem, 9.6vw, 8.4rem);
+      font-weight: 900;
+      line-height: 1;
+      letter-spacing: -0.02em;
+      color: var(--cream-light);
+      animation: fadeUp 1s ease 0.4s both;
+    }
+    .hero-title span { color: var(--wave-line); }
+
+    .hero-subtitle {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--cream);
+      opacity: 0.45;
+      font-weight: 300;
+      animation: fadeUp 1s ease 0.6s both;
+    }
+
+    .hero-stats {
+      display: flex;
+      gap: 3rem;
+      margin-top: 1rem;
+      animation: fadeUp 1s ease 0.8s both;
+    }
+    .stat {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--wave-line);
+      line-height: 1;
+    }
+    .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--cream);
+      opacity: 0.4;
+    }
+
+    /* Fin SVG — animated inside SVG element */
+    #shark-fin {
+      animation: finSway 5s ease-in-out infinite alternate;
+    }
+    @keyframes finSway {
+      from { transform: translate(650px, 530px); }
+      to   { transform: translate(650px, 524px); }
+    }
+
+    .hero-cta {
+      position: relative;
+      z-index: 10;
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      padding: 2rem 2rem 5rem;
+      animation: fadeUp 1s ease 1s both;
+    }
+
+    .btn {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      padding: 1rem 2.5rem;
+      border: 1px solid transparent;
+      cursor: pointer;
+      text-decoration: none;
+      transition: all 0.3s;
+      border-radius: 2px;
+    }
+    .btn-primary {
+      background: var(--slate);
+      color: var(--ocean-deep);
+      border-color: var(--slate);
+    }
+    .btn-primary:hover {
+      background: transparent;
+      color: var(--slate);
+    }
+    .btn-secondary {
+      background: transparent;
+      color: var(--cream);
+      border-color: rgba(220,230,234,0.25);
+    }
+    .btn-secondary:hover {
+      border-color: var(--cream);
+    }
+
+    /* Scroll indicator */
+    .scroll-hint {
+      position: absolute;
+      bottom: 1.5rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 10;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.5rem;
+      opacity: 0.4;
+      animation: fadeIn 2s ease 1.5s both;
+    }
+    .scroll-hint span {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+    }
+    .scroll-line {
+      width: 1px;
+      height: 40px;
+      background: var(--cream);
+      animation: scrollDrop 2s ease-in-out infinite;
+      transform-origin: top;
+    }
+    @keyframes scrollDrop {
+      0%   { transform: scaleY(0); opacity: 0; }
+      50%  { transform: scaleY(1); opacity: 1; }
+      100% { transform: scaleY(1); opacity: 0; transform-origin: bottom; }
+    }
+
+    /* ─── ABOUT ─── */
+    section { position: relative; }
+
+    .section-about {
+      background: #f7f7f7;
+      color: var(--ocean-deep);
+      padding: 8rem 2rem;
+      border-top: 4px solid #131e27;
+    }
+    .section-about .inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 5rem;
+      align-items: center;
+    }
+    .about-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: #6a8fa0;
+      margin-bottom: 1.5rem;
+    }
+    .about-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      line-height: 1.2;
+      color: #131e27;
+      margin-bottom: 1.5rem;
+    }
+    .about-body {
+      font-size: 1.1rem;
+      line-height: 1.8;
+      color: #1e3040;
+      opacity: 0.85;
+    }
+    .about-book {
+      position: relative;
+      order: -1;
+    }
+    .book-mockup {
+      display: block;
+      width: 100%;
+      max-width: 360px;
+      height: auto;
+      border-radius: 0;
+      box-shadow: none;
+      filter: none;
+    }
+    .book-tag {
+      display: inline-block;
+      margin-top: 1.5rem;
+      border: 1px solid #b8cdd6;
+      color: #2a4558;
+      background: transparent;
+      padding: 0.35rem 0.85rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      border-radius: 2px;
+    }
+
+    /* ─── FEATURES ─── */
+    .section-features {
+      background: var(--ocean-deep);
+      padding: 8rem 2rem;
+    }
+    .section-features .inner {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    .section-header {
+      text-align: center;
+      margin-bottom: 5rem;
+    }
+    .section-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.3em;
+      text-transform: uppercase;
+      color: var(--slate);
+      opacity: 0.7;
+      margin-bottom: 1rem;
+      display: block;
+    }
+    .section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(2rem, 4vw, 3rem);
+      font-weight: 700;
+      color: var(--cream-light);
+    }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: rgba(232,223,200,0.08);
+      border: 1px solid rgba(232,223,200,0.08);
+    }
+    .feature-card {
+      background: var(--ocean-deep);
+      padding: 3rem 2.5rem;
+      transition: background 0.3s;
+    }
+    .feature-card:hover { background: var(--ocean-mid); }
+    .feature-icon {
+      display: block;
+      margin-bottom: 1.5rem;
+      color: var(--slate);
+      opacity: 0.8;
+      line-height: 0;
+    }
+    .feature-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: var(--cream-light);
+      margin-bottom: 0.8rem;
+    }
+    .feature-body {
+      font-size: 1rem;
+      line-height: 1.7;
+      color: var(--cream);
+      opacity: 0.55;
+    }
+
+    /* ─── STATS BANNER ─── */
+    .section-stats {
+      background: var(--ocean-mid);
+      padding: 5rem 2rem;
+      border-top: 1px solid rgba(200,221,229,0.1);
+      border-bottom: 1px solid rgba(200,221,229,0.1);
+    }
+    .stats-grid {
+      max-width: 800px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 2rem;
+      text-align: center;
+    }
+    .stat-item-big .stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 2.8rem;
+      font-weight: 900;
+      color: var(--cream-light);
+      line-height: 1;
+      display: block;
+    }
+    .stat-item-big .stat-label {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--slate);
+      opacity: 0.7;
+      margin-top: 0.5rem;
+      display: block;
+    }
+
+    /* ─── AUTHOR ─── */
+    .section-author {
+      background: #111d27;
+      padding: 8rem 2rem;
+    }
+    .section-author .inner {
+      max-width: 700px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .author-avatar {
+      width: 72px;
+      height: 72px;
+      border-radius: 50%;
+      object-fit: cover;
+      display: block;
+      margin: 0 auto 1.5rem;
+      border: 2px solid rgba(184,205,214,0.3);
+    }
+    .author-line {
+      width: 40px;
+      height: 1px;
+      background: var(--slate);
+      margin: 0 auto 2rem;
+      opacity: 0.4;
+    }
+    .author-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 2rem;
+      font-weight: 700;
+      color: var(--cream-light);
+      margin-bottom: 1.5rem;
+    }
+    .author-bio {
+      font-size: 1.1rem;
+      line-height: 1.9;
+      color: var(--cream);
+      opacity: 0.55;
+    }
+    .author-handle {
+      display: inline-block;
+      margin-top: 2rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.75rem;
+      letter-spacing: 0.15em;
+      color: var(--slate);
+      text-decoration: none;
+      border-bottom: 1px solid rgba(184,205,214,0.3);
+      padding-bottom: 2px;
+      transition: border-color 0.3s;
+    }
+    .author-handle:hover { border-color: var(--slate); }
+
+    /* ─── CTA FINAL ─── */
+    .section-cta {
+      background: var(--ocean-mid);
+      padding: 8rem 2rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+    .section-cta::before {
+      content: 'TIBURONES';
+      position: absolute;
+      font-family: 'Playfair Display', serif;
+      font-size: 18vw;
+      font-weight: 900;
+      color: rgba(255,255,255,0.02);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      white-space: nowrap;
+      pointer-events: none;
+    }
+    .section-cta .section-title { margin-bottom: 1rem; }
+    .cta-sub {
+      font-size: 1.1rem;
+      color: var(--cream);
+      opacity: 0.55;
+      margin-bottom: 3rem;
+    }
+
+    /* ─── FOOTER ─── */
+    footer {
+      background: var(--ocean-deep);
+      padding: 2.5rem 3rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(232,223,200,0.06);
+    }
+    .footer-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 0.8rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--slate);
+      opacity: 0.6;
+    }
+    .footer-copy {
+      font-family: 'DM Mono', monospace;
+      font-size: 0.6rem;
+      letter-spacing: 0.15em;
+      color: var(--cream);
+      opacity: 0.3;
+    }
+    .footer-ig {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'DM Mono', monospace;
+      font-size: 0.65rem;
+      letter-spacing: 0.12em;
+      color: var(--slate);
+      text-decoration: none;
+      opacity: 0.55;
+      transition: opacity 0.3s;
+    }
+    .footer-ig:hover { opacity: 1; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to   { opacity: 0.4; }
+    }
+
+    /* ─── RESPONSIVE ─── */
+    @media (max-width: 768px) {
+      nav { padding: 1.2rem 1.5rem; }
+      .nav-links { display: none; }
+      .hero-stats { gap: 1.5rem; }
+      .stat-number { font-size: 1.4rem; }
+      .section-about .inner { grid-template-columns: 1fr; gap: 3rem; }
+      .about-book { text-align: center; }
+      .book-mockup { max-width: 200px; }
+      .features-grid { grid-template-columns: 1fr; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 3rem; }
+      footer { flex-direction: column; gap: 1rem; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav>
+    <div class="nav-logo">
+      <img src="img3.webp" alt="Logo" class="nav-avatar"/>
+      Identificación de Tiburones
+    </div>
+    <ul class="nav-links">
+      <li><a href="#libro">El Libro</a></li>
+      <li><a href="#contenido">Contenido</a></li>
+      <li><a href="#autor">Autor</a></li>
+      <li><a href="#adquirir">Adquirir</a></li>
+    </ul>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+
+    <!-- FULL ILLUSTRATED BACKGROUND: Japanese woodblock-style waves + sky + clouds -->
+    <div class="hero-bg">
+      <svg viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <!-- Sky gradient: deep navy top to slate-teal horizon -->
+          <linearGradient id="skyGrad" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%"   stop-color="#1a3844"/>
+            <stop offset="55%"  stop-color="#2d5162"/>
+            <stop offset="100%" stop-color="#405d68"/>
+          </linearGradient>
+          <!-- Fin gradient: wave teal palette -->
+          <linearGradient id="finG" x1="35%" y1="0%" x2="65%" y2="100%">
+            <stop offset="0%"   stop-color="#5c7d6f"/>
+            <stop offset="50%"  stop-color="#4c6664"/>
+            <stop offset="100%" stop-color="#374d4a"/>
+          </linearGradient>
+          <filter id="finShadow" x="-20%" y="-20%" width="140%" height="140%">
+            <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#0a1520" flood-opacity="0.5"/>
+          </filter>
+        </defs>
+
+        <!-- SKY -->
+        <rect width="1440" height="900" fill="url(#skyGrad)"/>
+
+        <!-- CLOUD RIGHT — fluffy stacked circles, book-cover style -->
+        <g class="cloud-r" transform="translate(1080, 200)">
+          <ellipse cx="60" cy="38" rx="52" ry="22" fill="#d8e8ed" opacity="0.18"/>
+          <ellipse cx="90" cy="28" rx="38" ry="18" fill="#ddedf2" opacity="0.16"/>
+          <ellipse cx="45" cy="26" rx="32" ry="16" fill="#ddedf2" opacity="0.15"/>
+          <ellipse cx="72" cy="18" rx="28" ry="14" fill="#e2f0f4" opacity="0.14"/>
+          <ellipse cx="100" cy="22" rx="22" ry="12" fill="#e2f0f4" opacity="0.13"/>
+        </g>
+
+        <!-- CLOUD LEFT — smaller -->
+        <g class="cloud-l" transform="translate(120, 220)">
+          <ellipse cx="40" cy="28" rx="38" ry="16" fill="#d8e8ed" opacity="0.12"/>
+          <ellipse cx="62" cy="20" rx="28" ry="13" fill="#ddedf2" opacity="0.10"/>
+          <ellipse cx="28" cy="20" rx="22" ry="11" fill="#ddedf2" opacity="0.10"/>
+        </g>
+
+        <!-- ═══ WAVES + FIN — layered so fin sits IN the water ═══ -->
+
+        <!-- Wave layer 1 — back, darkest -->
+        <g class="wave-anim2">
+          <path d="M-60,560 Q-20,520 20,560 Q60,600 100,560 Q140,520 180,560 Q220,600 260,560 Q300,520 340,560 Q380,600 420,560 Q460,520 500,560 Q540,600 580,560 Q620,520 660,560 Q700,600 740,560 Q780,520 820,560 Q860,600 900,560 Q940,520 980,560 Q1020,600 1060,560 Q1100,520 1140,560 Q1180,600 1220,560 Q1260,520 1300,560 Q1340,600 1380,560 Q1420,520 1460,560 L1460,900 L-60,900 Z" fill="#5c6f65"/>
+          <path d="M-60,560 Q-20,520 20,560 Q60,600 100,560 Q140,520 180,560 Q220,600 260,560 Q300,520 340,560 Q380,600 420,560 Q460,520 500,560 Q540,600 580,560 Q620,520 660,560 Q700,600 740,560 Q780,520 820,560 Q860,600 900,560 Q940,520 980,560 Q1020,600 1060,560 Q1100,520 1140,560 Q1180,600 1220,560 Q1260,520 1300,560 Q1340,600 1380,560 Q1420,520 1460,560" fill="none" stroke="#d5d1b8" stroke-width="2" opacity="0.35"/>
+        </g>
+
+        <!-- Wave layer 2 -->
+        <g class="wave-anim">
+          <path d="M-40,595 Q0,555 40,595 Q80,635 120,595 Q160,555 200,595 Q240,635 280,595 Q320,555 360,595 Q400,635 440,595 Q480,555 520,595 Q560,635 600,595 Q640,555 680,595 Q720,635 760,595 Q800,555 840,595 Q880,635 920,595 Q960,555 1000,595 Q1040,635 1080,595 Q1120,555 1160,595 Q1200,635 1240,595 Q1280,555 1320,595 Q1360,635 1400,595 Q1440,555 1480,595 L1480,900 L-40,900 Z" fill="#374d4a"/>
+          <path d="M-40,595 Q0,555 40,595 Q80,635 120,595 Q160,555 200,595 Q240,635 280,595 Q320,555 360,595 Q400,635 440,595 Q480,555 520,595 Q560,635 600,595 Q640,555 680,595 Q720,635 760,595 Q800,555 840,595 Q880,635 920,595 Q960,555 1000,595 Q1040,635 1080,595 Q1120,555 1160,595 Q1200,635 1240,595 Q1280,555 1320,595 Q1360,635 1400,595 Q1440,555 1480,595" fill="none" stroke="#d5d1b8" stroke-width="2" opacity="0.4"/>
+        </g>
+
+        <!-- Wave layer 3 -->
+        <g class="wave-anim2">
+          <path d="M-20,630 Q20,590 60,630 Q100,670 140,630 Q180,590 220,630 Q260,670 300,630 Q340,590 380,630 Q420,670 460,630 Q500,590 540,630 Q580,670 620,630 Q660,590 700,630 Q740,670 780,630 Q820,590 860,630 Q900,670 940,630 Q980,590 1020,630 Q1060,670 1100,630 Q1140,590 1180,630 Q1220,670 1260,630 Q1300,590 1340,630 Q1380,670 1420,630 Q1460,590 1500,630 L1500,900 L-20,900 Z" fill="#5c7d6f"/>
+          <path d="M-20,630 Q20,590 60,630 Q100,670 140,630 Q180,590 220,630 Q260,670 300,630 Q340,590 380,630 Q420,670 460,630 Q500,590 540,630 Q580,670 620,630 Q660,590 700,630 Q740,670 780,630 Q820,590 860,630 Q900,670 940,630 Q980,590 1020,630 Q1060,670 1100,630 Q1140,590 1180,630 Q1220,670 1260,630 Q1300,590 1340,630 Q1380,670 1420,630 Q1460,590 1500,630" fill="none" stroke="#d5d1b8" stroke-width="2" opacity="0.45"/>
+        </g>
+
+        <!-- ═══ SHARK FIN — drawn HERE between layers 3 and 4 ═══
+             Fin base (translate-y + 185) = 450 + 185 = 635, sitting right in the wave band -->
+        <g filter="url(#finShadow)" transform="translate(650, 530)" id="shark-fin">
+          <path d="
+            M65,5
+            C61,38 50,78 33,122
+            C16,164 -4,200 -32,242
+            C-14,239 12,236 40,240
+            C54,241 62,242 66,243
+            C70,242 74,241 92,240
+            C118,236 148,239 172,242
+            C152,200 126,164 108,122
+            C90,78 69,38 65,5 Z
+          " fill="url(#finG)"/>
+          <!-- Rim light — leading edge left -->
+          <path d="M65,5 C61,38 50,78 33,122 C16,164 -4,200 -32,242"
+                fill="none" stroke="rgba(255,255,255,0.2)" stroke-width="2" stroke-linecap="round"/>
+          <!-- Shadow accent — trailing edge right -->
+          <path d="M65,5 C67,42 70,84 76,128 C82,158 92,186 106,214"
+                fill="none" stroke="rgba(0,0,0,0.14)" stroke-width="1.5" stroke-linecap="round"/>
+        </g>
+
+        <!-- Wave layer 4 — covers fin base -->
+        <g class="wave-anim">
+          <path d="M-30,665 Q10,625 50,665 Q90,705 130,665 Q170,625 210,665 Q250,705 290,665 Q330,625 370,665 Q410,705 450,665 Q490,625 530,665 Q570,705 610,665 Q650,625 690,665 Q730,705 770,665 Q810,625 850,665 Q890,705 930,665 Q970,625 1010,665 Q1050,705 1090,665 Q1130,625 1170,665 Q1210,705 1250,665 Q1290,625 1330,665 Q1370,705 1410,665 Q1450,625 1490,665 L1490,900 L-30,900 Z" fill="#516c62"/>
+          <path d="M-30,665 Q10,625 50,665 Q90,705 130,665 Q170,625 210,665 Q250,705 290,665 Q330,625 370,665 Q410,705 450,665 Q490,625 530,665 Q570,705 610,665 Q650,625 690,665 Q730,705 770,665 Q810,625 850,665 Q890,705 930,665 Q970,625 1010,665 Q1050,705 1090,665 Q1130,625 1170,665 Q1210,705 1250,665 Q1290,625 1330,665 Q1370,705 1410,665 Q1450,625 1490,665" fill="none" stroke="#d5d1b8" stroke-width="2" opacity="0.5"/>
+        </g>
+
+        <!-- Wave layer 5 -->
+        <g class="wave-anim2">
+          <path d="M-10,700 Q30,660 70,700 Q110,740 150,700 Q190,660 230,700 Q270,740 310,700 Q350,660 390,700 Q430,740 470,700 Q510,660 550,700 Q590,740 630,700 Q670,660 710,700 Q750,740 790,700 Q830,660 870,700 Q910,740 950,700 Q990,660 1030,700 Q1070,740 1110,700 Q1150,660 1190,700 Q1230,740 1270,700 Q1310,660 1350,700 Q1390,740 1430,700 Q1470,660 1510,700 L1510,900 L-10,900 Z" fill="#547466"/>
+          <path d="M-10,700 Q30,660 70,700 Q110,740 150,700 Q190,660 230,700 Q270,740 310,700 Q350,660 390,700 Q430,740 470,700 Q510,660 550,700 Q590,740 630,700 Q670,660 710,700 Q750,740 790,700 Q830,660 870,700 Q910,740 950,700 Q990,660 1030,700 Q1070,740 1110,700 Q1150,660 1190,700 Q1230,740 1270,700 Q1310,660 1350,700 Q1390,740 1430,700 Q1470,660 1510,700" fill="none" stroke="#d5d1b8" stroke-width="2.5" opacity="0.55"/>
+        </g>
+
+        <!-- Wave layer 6 -->
+        <g class="wave-anim">
+          <path d="M-20,738 Q20,698 60,738 Q100,778 140,738 Q180,698 220,738 Q260,778 300,738 Q340,698 380,738 Q420,778 460,738 Q500,698 540,738 Q580,778 620,738 Q660,698 700,738 Q740,778 780,738 Q820,698 860,738 Q900,778 940,738 Q980,698 1020,738 Q1060,778 1100,738 Q1140,698 1180,738 Q1220,778 1260,738 Q1300,698 1340,738 Q1380,778 1420,738 Q1460,698 1500,738 L1500,900 L-20,900 Z" fill="#4c6664"/>
+          <path d="M-20,738 Q20,698 60,738 Q100,778 140,738 Q180,698 220,738 Q260,778 300,738 Q340,698 380,738 Q420,778 460,738 Q500,698 540,738 Q580,778 620,738 Q660,698 700,738 Q740,778 780,738 Q820,698 860,738 Q900,778 940,738 Q980,698 1020,738 Q1060,778 1100,738 Q1140,698 1180,738 Q1220,778 1260,738 Q1300,698 1340,738 Q1380,778 1420,738 Q1460,698 1500,738" fill="none" stroke="#d5d1b8" stroke-width="2.5" opacity="0.65"/>
+        </g>
+
+        <!-- Wave layer 7 — front -->
+        <g class="wave-anim2">
+          <path d="M-30,775 Q10,735 50,775 Q90,815 130,775 Q170,735 210,775 Q250,815 290,775 Q330,735 370,775 Q410,815 450,775 Q490,735 530,775 Q570,815 610,775 Q650,735 690,775 Q730,815 770,775 Q810,735 850,775 Q890,815 930,775 Q970,735 1010,775 Q1050,815 1090,775 Q1130,735 1170,775 Q1210,815 1250,775 Q1290,735 1330,775 Q1370,815 1410,775 Q1450,735 1490,775 L1490,900 L-30,900 Z" fill="#3c585a"/>
+          <path d="M-30,775 Q10,735 50,775 Q90,815 130,775 Q170,735 210,775 Q250,815 290,775 Q330,735 370,775 Q410,815 450,775 Q490,735 530,775 Q570,815 610,775 Q650,735 690,775 Q730,815 770,775 Q810,735 850,775 Q890,815 930,775 Q970,735 1010,775 Q1050,815 1090,775 Q1130,735 1170,775 Q1210,815 1250,775 Q1290,735 1330,775 Q1370,815 1410,775 Q1450,735 1490,775" fill="none" stroke="#d5d1b8" stroke-width="3" opacity="0.7"/>
+        </g>
+      </svg>
+    </div>
+
+    <div class="hero-content">
+      <p class="hero-eyebrow">Guillermo Carranza Hidalgo</p>
+      <h1 class="hero-title">
+        Identificación<br/>
+        <span>de Tiburones</span>
+      </h1>
+      <p class="hero-subtitle">8 órdenes · 35 familias · 103 géneros · 518 especies</p>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-number">518</span>
+          <span class="stat-label">Especies</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">35</span>
+          <span class="stat-label">Familias</span>
+        </div>
+        <div class="stat">
+          <span class="stat-number">103</span>
+          <span class="stat-label">Géneros</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-cta">
+      <a href="#adquirir" class="btn btn-primary">Adquirir el libro</a>
+      <a href="#contenido" class="btn btn-secondary">Ver contenido</a>
+    </div>
+
+    <div class="scroll-hint">
+      <span>Explorar</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section-about" id="libro">
+    <div class="inner">
+      <div class="about-book">
+        <img
+          src="img2.webp"
+          alt="Identificación de Tiburones — mockup 3D"
+          class="book-mockup"
+        />
+      </div>
+      <div class="about-text">
+        <p class="about-label">El libro</p>
+        <h2 class="about-title">La guía definitiva para identificar tiburones</h2>
+        <p class="about-body">
+          Una obra de referencia exhaustiva que reúne por primera vez en español las 518 especies de tiburones conocidas, organizadas taxonómicamente en 8 órdenes y 35 familias. Desde el gran tiburón blanco hasta las especies más crípticas de aguas profundas.
+        </p>
+        <span class="book-tag">Primera edición en español</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="section-features" id="contenido">
+    <div class="inner">
+      <div class="section-header">
+        <span class="section-label">Contenido</span>
+        <h2 class="section-title">Todo lo que necesitas saber</h2>
+      </div>
+      <div class="features-grid">
+        <div class="feature-card">
+          <span class="feature-icon">
+            <!-- cladogram / phylogenetic tree -->
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <line x1="12" y1="3" x2="12" y2="9"/>
+              <line x1="12" y1="9" x2="6" y2="15"/>
+              <line x1="12" y1="9" x2="18" y2="15"/>
+              <line x1="6" y1="15" x2="4" y2="21"/>
+              <line x1="6" y1="15" x2="9" y2="21"/>
+              <line x1="18" y1="15" x2="15" y2="21"/>
+              <line x1="18" y1="15" x2="20" y2="21"/>
+            </svg>
+          </span>
+          <h3 class="feature-title">Taxonomía completa</h3>
+          <p class="feature-body">Clasificación actualizada según los estándares internacionales. Cada especie con su nomenclatura binomial, sinonimias y posición filogenética.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">
+            <!-- globe with meridians -->
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="9"/>
+              <path d="M12 3c-2.5 4-2.5 14 0 18"/>
+              <path d="M12 3c2.5 4 2.5 14 0 18"/>
+              <line x1="3" y1="12" x2="21" y2="12"/>
+              <path d="M4.5 7.5q7.5 3 15 0"/>
+              <path d="M4.5 16.5q7.5-3 15 0"/>
+            </svg>
+          </span>
+          <h3 class="feature-title">Distribución global</h3>
+          <p class="feature-body">Mapas de distribución para cada especie. Profundidades, hábitats preferentes y rangos geográficos documentados.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">
+            <!-- magnifying glass -->
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" aria-hidden="true">
+              <circle cx="10.5" cy="10.5" r="7.5"/>
+              <line x1="16.5" y1="16.5" x2="22" y2="22"/>
+            </svg>
+          </span>
+          <h3 class="feature-title">Claves diagnósticas</h3>
+          <p class="feature-body">Caracteres morfológicos diferenciales para identificar especies similares. Dentición, aletas, coloration patterns y medidas cefálicas.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">
+            <!-- shield outline -->
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 2L3 6.5v6C3 17.7 7 21.5 12 23c5-1.5 9-5.3 9-10.5v-6z"/>
+            </svg>
+          </span>
+          <h3 class="feature-title">Estado de conservación</h3>
+          <p class="feature-body">Estado IUCN actualizado para cada especie. Tendencias poblacionales, amenazas principales y medidas de protección vigentes.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">
+            <!-- pen / drawing nib -->
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M17 3l4 4L8 20H4v-4z"/>
+              <line x1="14" y1="6" x2="18" y2="10"/>
+            </svg>
+          </span>
+          <h3 class="feature-title">Ilustraciones de referencia</h3>
+          <p class="feature-body">Siluetas anatómicas precisas que destacan los caracteres diagnósticos clave para la identificación en campo y laboratorio.</p>
+        </div>
+        <div class="feature-card">
+          <span class="feature-icon">
+            <!-- open book -->
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M12 7v14"/>
+              <path d="M12 7C9.5 5.5 5 5.5 2 7v14c3-1.5 7.5-1.5 10 0"/>
+              <path d="M12 7c2.5-1.5 7-1.5 10 0v14c-3-1.5-7.5-1.5-10 0"/>
+            </svg>
+          </span>
+          <h3 class="feature-title">Bibliografía extensa</h3>
+          <p class="feature-body">Referencias bibliográficas primarias para cada taxón. Base científica sólida para investigadores, estudiantes y divulgadores.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STATS -->
+  <section class="section-stats">
+    <div class="stats-grid">
+      <div class="stat-item-big">
+        <span class="stat-number">518</span>
+        <span class="stat-label">Especies</span>
+      </div>
+      <div class="stat-item-big">
+        <span class="stat-number">103</span>
+        <span class="stat-label">Géneros</span>
+      </div>
+      <div class="stat-item-big">
+        <span class="stat-number">35</span>
+        <span class="stat-label">Familias</span>
+      </div>
+      <div class="stat-item-big">
+        <span class="stat-number">8</span>
+        <span class="stat-label">Órdenes</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- AUTHOR -->
+  <section class="section-author" id="autor">
+    <div class="inner">
+      <img src="img3.webp" alt="Logo" class="author-avatar"/>
+      <div class="author-line"></div>
+      <h2 class="author-name">Guillermo Carranza Hidalgo</h2>
+      <p class="author-bio">
+        Naturalista y divulgador científico especializado en elasmobranquios. Años de investigación y trabajo de campo han dado lugar a la obra de referencia más completa sobre identificación de tiburones en lengua española.
+      </p>
+      <a href="https://instagram.com/identificaciondetiburones" class="author-handle" target="_blank">@identificaciondetiburones</a>
+    </div>
+  </section>
+
+  <!-- CTA FINAL -->
+  <section class="section-cta" id="adquirir">
+    <span class="section-label">Disponible ahora</span>
+    <h2 class="section-title">¿Listo para sumergirte?</h2>
+    <p class="cta-sub">La guía de identificación de tiburones más completa en español</p>
+    <div style="display:flex; gap:1rem; justify-content:center; flex-wrap:wrap;">
+      <a href="#" class="btn btn-primary">Adquirir el libro</a>
+      <a href="https://instagram.com/identificaciondetiburones" class="btn btn-secondary" target="_blank">Seguir en Instagram</a>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">
+      <img src="img3.webp" alt="Logo" class="nav-avatar"/>
+      Identificación de Tiburones
+    </div>
+    <a href="https://instagram.com/identificaciondetiburones" class="footer-ig" target="_blank" rel="noopener">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <rect x="2" y="2" width="20" height="20" rx="5"/>
+        <circle cx="12" cy="12" r="5"/>
+        <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/>
+      </svg>
+      @identificaciondetiburones
+    </a>
+    <div class="footer-copy">© 2025 Guillermo Carranza Hidalgo</div>
+  </footer>
+
+</body>
+</html>
