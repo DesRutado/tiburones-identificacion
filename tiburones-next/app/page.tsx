@@ -101,28 +101,40 @@ export default function HomePage() {
             <div className="feature-card">
               <span className="feature-icon">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <text x="2" y="15" fontSize="11" fontFamily="serif" stroke="none" fill="currentColor" fontWeight="bold">A</text>
-                  <line x1="11" y1="5" x2="22" y2="5" />
-                  <text x="13" y="21" fontSize="11" fontFamily="serif" stroke="none" fill="currentColor" fontWeight="bold">Z</text>
-                  <line x1="2" y1="21" x2="12" y2="21" />
+                  <path d="M9 2h6l1 4H8z" />
+                  <circle cx="12" cy="14" r="5" />
+                  <line x1="12" y1="19" x2="12" y2="22" />
+                  <line x1="9" y1="22" x2="15" y2="22" />
                 </svg>
               </span>
-              <h3 className="feature-title">Diccionario</h3>
+              <h3 className="feature-title">Taxonomía completa</h3>
               <p className="feature-body">
-                Diccionario final con las definiciones y explicaciones de los términos técnicos a lo largo del libro.
+                Clasificación actualizada dividida en órdenes, familias, géneros y especies. Nombre científico, nombre común, medida común y medida del mayor ejemplar registrado.
               </p>
             </div>
             <div className="feature-card">
               <span className="feature-icon">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
-                  <path d="M2 7 Q5.5 4 9 7 Q12.5 10 16 7 Q19.5 4 23 7" />
-                  <path d="M2 13 Q5.5 10 9 13 Q12.5 16 16 13 Q19.5 10 23 13" />
-                  <path d="M2 19 Q5.5 16 9 19 Q12.5 22 16 19 Q19.5 16 23 19" />
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <rect x="2" y="7" width="20" height="14" rx="2" />
+                  <circle cx="12" cy="14" r="4" />
+                  <path d="M16 7l-1.5-3h-5L8 7" />
                 </svg>
               </span>
-              <h3 className="feature-title">Entorno y comportamiento</h3>
+              <h3 className="feature-title">Ilustraciones de referencia</h3>
               <p className="feature-body">
-                Lugar natural de distribución dentro de las zonas en las que las aguas se dividen, alimentación y reproducción de todas las especies.
+                Fotografías totalmente reales que destacan los caracteres diagnósticos clave para la identificación de las especies.
+              </p>
+            </div>
+            <div className="feature-card">
+              <span className="feature-icon">
+                <svg width="32" height="32" viewBox="0 0 32 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                  <path d="M16 3 C14 7 10 9 3 10 C8 10.5 12 13 14 16 C15 14 15.5 12 16 11 C16.5 12 17 14 18 16 C20 13 24 10.5 29 10 C22 9 18 7 16 3 Z" />
+                  <path d="M7 17 Q16 21 25 17" />
+                </svg>
+              </span>
+              <h3 className="feature-title">Identificación</h3>
+              <p className="feature-body">
+                Identificación de las especies mediante descripción completa de los rasgos físicos.
               </p>
             </div>
             <div className="feature-card">
@@ -141,41 +153,29 @@ export default function HomePage() {
             </div>
             <div className="feature-card">
               <span className="feature-icon">
-                <svg width="32" height="32" viewBox="0 0 32 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M16 3 C14 7 10 9 3 10 C8 10.5 12 13 14 16 C15 14 15.5 12 16 11 C16.5 12 17 14 18 16 C20 13 24 10.5 29 10 C22 9 18 7 16 3 Z" />
-                  <path d="M7 17 Q16 21 25 17" />
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" aria-hidden="true">
+                  <path d="M2 7 Q5.5 4 9 7 Q12.5 10 16 7 Q19.5 4 23 7" />
+                  <path d="M2 13 Q5.5 10 9 13 Q12.5 16 16 13 Q19.5 10 23 13" />
+                  <path d="M2 19 Q5.5 16 9 19 Q12.5 22 16 19 Q19.5 16 23 19" />
                 </svg>
               </span>
-              <h3 className="feature-title">Identificación</h3>
+              <h3 className="feature-title">Entorno y comportamiento</h3>
               <p className="feature-body">
-                Identificación de las especies mediante descripción completa de los rasgos físicos.
+                Lugar natural de distribución dentro de las zonas en las que las aguas se dividen, alimentación y reproducción de todas las especies.
               </p>
             </div>
             <div className="feature-card">
               <span className="feature-icon">
                 <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <rect x="2" y="7" width="20" height="14" rx="2" />
-                  <circle cx="12" cy="14" r="4" />
-                  <path d="M16 7l-1.5-3h-5L8 7" />
+                  <text x="2" y="15" fontSize="11" fontFamily="serif" stroke="none" fill="currentColor" fontWeight="bold">A</text>
+                  <line x1="11" y1="5" x2="22" y2="5" />
+                  <text x="13" y="21" fontSize="11" fontFamily="serif" stroke="none" fill="currentColor" fontWeight="bold">Z</text>
+                  <line x1="2" y1="21" x2="12" y2="21" />
                 </svg>
               </span>
-              <h3 className="feature-title">Ilustraciones de referencia</h3>
+              <h3 className="feature-title">Diccionario</h3>
               <p className="feature-body">
-                Fotografías totalmente reales que destacan los caracteres diagnósticos clave para la identificación de las especies.
-              </p>
-            </div>
-            <div className="feature-card">
-              <span className="feature-icon">
-                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-                  <path d="M9 2h6l1 4H8z" />
-                  <circle cx="12" cy="14" r="5" />
-                  <line x1="12" y1="19" x2="12" y2="22" />
-                  <line x1="9" y1="22" x2="15" y2="22" />
-                </svg>
-              </span>
-              <h3 className="feature-title">Taxonomía completa</h3>
-              <p className="feature-body">
-                Clasificación actualizada dividida en órdenes, familias, géneros y especies. Nombre científico, nombre común, medida común y medida del mayor ejemplar registrado.
+                Diccionario final con las definiciones y explicaciones de los términos técnicos a lo largo del libro.
               </p>
             </div>
           </div>
