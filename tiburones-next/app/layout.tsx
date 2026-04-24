@@ -11,7 +11,7 @@ const playfair = Playfair_Display({
 
 const crimsonPro = Crimson_Pro({
   subsets: ['latin'],
-  weight: ['300', '400'],
+  weight: ['300', '400', '600', '700'],
   style: ['normal', 'italic'],
   variable: '--font-crimson',
 })
