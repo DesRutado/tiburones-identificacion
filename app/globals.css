@@ -1058,6 +1058,15 @@ footer {
   border-radius: 2px;
   margin: 2rem 0;
 }
+.post-columns {
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: 1fr;
+  gap: 2.5rem;
+  margin: 1.5rem 0;
+}
+.post-column > *:first-child { margin-top: 0; }
+.post-column > *:last-child { margin-bottom: 0; }
 .post-image {
   margin: 2rem 0;
 }
@@ -1094,6 +1103,7 @@ footer {
   nav { padding: 1.2rem 1.5rem; }
   .nav-links { display: none; }
   .nav-hamburger { display: block; }
+  .post-columns { grid-auto-flow: row; grid-auto-columns: unset; grid-template-columns: 1fr; }
   .blog-main { grid-template-columns: 1fr; padding: 2rem 1.5rem 4rem; gap: 2rem; }
   .post-featured { grid-template-columns: 1fr; }
   .post-featured-visual { min-height: 220px; }

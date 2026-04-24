@@ -111,6 +111,19 @@ function renderBlocks(blocks: any[]): React.ReactNode {
           </pre>
         )
         break
+      case 'column_list': {
+        const columns: any[] = block.children ?? []
+        nodes.push(
+          <div key={block.id} className="post-columns">
+            {columns.map((col: any) => (
+              <div key={col.id} className="post-column">
+                {renderBlocks(col.children ?? [])}
+              </div>
+            ))}
+          </div>
+        )
+        break
+      }
       case 'divider':
         nodes.push(<hr key={block.id} />)
         break

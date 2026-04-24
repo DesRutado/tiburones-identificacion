@@ -57,6 +57,30 @@ export async function getPosts(): Promise<Post[]> {
   }
 }
 
+async function fetchBlocksDeep(blockId: string): Promise<any[]> {
+  const response = await notion.blocks.children.list({ block_id: blockId, page_size: 100 })
+  const blocks = response.results as any[]
+
+  for (const block of blocks) {
+    if (block.type === 'column_list' && block.has_children) {
+      const colsResponse = await notion.blocks.children.list({ block_id: block.id, page_size: 100 })
+      block.children = await Promise.all(
+        (colsResponse.results as any[]).map(async (col) => {
+          if (col.has_children) {
+            const contentResponse = await notion.blocks.children.list({ block_id: col.id, page_size: 100 })
+            col.children = contentResponse.results
+          } else {
+            col.children = []
+          }
+          return col
+        })
+      )
+    }
+  }
+
+  return blocks
+}
+
 export async function getPost(
   slug: string
 ): Promise<{ post: Post; blocks: any[] } | null> {
@@ -80,12 +104,9 @@ export async function getPost(
 
     const post = extractPost(page)
 
-    const blocksResponse = await notion.blocks.children.list({
-      block_id: page.id,
-      page_size: 100,
-    })
+    const blocks = await fetchBlocksDeep(page.id)
 
-    return { post, blocks: blocksResponse.results }
+    return { post, blocks }
   } catch (err) {
     console.error('[notion] getPost error:', err)
     return null
