@@ -6,7 +6,7 @@ import Footer from '@/components/Footer'
 import HeroWaves from '@/components/HeroWaves'
 import { getPosts, type Post } from '@/lib/notion'
 
-export const revalidate = 3600
+export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Artículos',

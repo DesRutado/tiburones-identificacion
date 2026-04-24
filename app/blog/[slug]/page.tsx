@@ -5,7 +5,7 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import { getPost, getPosts } from '@/lib/notion'
 
-export const revalidate = 3600
+export const revalidate = 300
 
 interface PageProps {
   params: Promise<{ slug: string }>
