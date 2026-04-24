@@ -1,5 +1,6 @@
 import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
+import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
@@ -120,7 +121,17 @@ function renderBlocks(blocks: any[]): React.ReactNode {
             : block.image.file.url
         const caption = block.image.caption?.[0]?.plain_text ?? ''
         nodes.push(
-          <img key={block.id} src={url} alt={caption} />
+          <figure key={block.id} className="post-image">
+            <Image
+              src={url}
+              alt={caption}
+              width={0}
+              height={0}
+              sizes="(max-width: 720px) 100vw, 720px"
+              style={{ width: '100%', height: 'auto' }}
+            />
+            {caption && <figcaption>{caption}</figcaption>}
+          </figure>
         )
         break
       }

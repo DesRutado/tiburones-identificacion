@@ -1058,6 +1058,21 @@ footer {
   border-radius: 2px;
   margin: 2rem 0;
 }
+.post-image {
+  margin: 2rem 0;
+}
+.post-image img {
+  border-radius: 2px;
+  margin: 0;
+}
+.post-image figcaption {
+  margin-top: 0.6rem;
+  font-family: var(--font-crimson), serif;
+  font-size: 0.9rem;
+  color: var(--text-mid);
+  opacity: 0.7;
+  text-align: center;
+}
 .post-back {
   font-family: var(--font-dm-mono), monospace;
   font-size: 0.65rem;
