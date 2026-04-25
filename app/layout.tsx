@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Playfair_Display, Crimson_Pro, DM_Mono } from 'next/font/google'
 import './globals.css'
+import SharkChat from '@/components/SharkChat'
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -42,7 +43,10 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       lang="es"
       className={`${playfair.variable} ${crimsonPro.variable} ${dmMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <SharkChat />
+      </body>
     </html>
   )
 }
