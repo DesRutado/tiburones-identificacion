@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Image from 'next/image'
+import ReactMarkdown from 'react-markdown'
 
 interface Message {
   role: 'user' | 'assistant'
@@ -109,7 +110,11 @@ export default function SharkChat() {
 
             {messages.map((msg, i) => (
               <div key={i} className={`sc-msg sc-msg--${msg.role}`}>
-                {msg.text}
+                {msg.role === 'assistant' ? (
+                  <ReactMarkdown>{msg.text}</ReactMarkdown>
+                ) : (
+                  msg.text
+                )}
               </div>
             ))}
 

@@ -1218,7 +1218,6 @@ footer {
   border-radius: 12px;
   font-size: 0.83rem;
   line-height: 1.5;
-  white-space: pre-wrap;
   word-break: break-word;
 }
 .sc-msg--user {
@@ -1226,6 +1225,7 @@ footer {
   background: var(--ocean-light);
   color: var(--cream-light);
   border-bottom-right-radius: 4px;
+  white-space: pre-wrap;
 }
 .sc-msg--assistant {
   align-self: flex-start;
@@ -1233,6 +1233,37 @@ footer {
   color: var(--cream);
   border-bottom-left-radius: 4px;
   border: 1px solid var(--ocean-light);
+}
+
+/* Markdown inside assistant bubbles */
+.sc-msg--assistant p { margin: 0 0 0.5em; }
+.sc-msg--assistant p:last-child { margin-bottom: 0; }
+.sc-msg--assistant strong { font-weight: 700; color: var(--cream-light); }
+.sc-msg--assistant em { font-style: italic; }
+.sc-msg--assistant ul,
+.sc-msg--assistant ol { margin: 0.4em 0 0.5em 1.1em; padding: 0; }
+.sc-msg--assistant li { margin-bottom: 0.2em; }
+.sc-msg--assistant h1,
+.sc-msg--assistant h2,
+.sc-msg--assistant h3 {
+  font-family: var(--font-playfair), serif;
+  font-weight: 700;
+  color: var(--cream-light);
+  margin: 0.6em 0 0.3em;
+  line-height: 1.3;
+  font-size: 0.92rem;
+}
+.sc-msg--assistant code {
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 0.78rem;
+  background: var(--ocean-light);
+  padding: 0.1em 0.35em;
+  border-radius: 4px;
+}
+.sc-msg--assistant hr {
+  border: none;
+  border-top: 1px solid var(--ocean-light);
+  margin: 0.6em 0;
 }
 
 .sc-dots {
