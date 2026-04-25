@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import HeroWaves from '@/components/HeroWaves'
-import { getPosts, type Post } from '@/lib/notion'
+import { getPosts, notionImageSrc, type Post } from '@/lib/notion'
 
 export const revalidate = 300
 
@@ -46,7 +46,7 @@ function FeaturedPost({ post }: { post: Post }) {
         {post.coverImage ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={post.coverImage}
+            src={notionImageSrc(post.coverImage)}
             alt={post.title}
             style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
           />
@@ -90,7 +90,7 @@ function PostCard({ post, index }: { post: Post; index: number }) {
         {post.coverImage ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
-            src={post.coverImage}
+            src={notionImageSrc(post.coverImage)}
             alt={post.title}
             style={{ width: '100%', height: '100%', objectFit: 'cover' }}
           />

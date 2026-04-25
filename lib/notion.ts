@@ -1,7 +1,13 @@
 import { Client } from '@notionhq/client'
 import type { PageObjectResponse } from '@notionhq/client/build/src/api-endpoints'
 
-const notion = new Client({ auth: process.env.NOTION_TOKEN })
+// Tell Next.js to revalidate Notion API responses every 300 s (matching the
+// route-level `revalidate = 300`) so ISR always gets fresh S3 pre-signed URLs.
+// Notion S3 URLs expire in ~60 min; refreshing every 5 min keeps them safe.
+const notion = new Client({
+  auth: process.env.NOTION_TOKEN,
+  fetch: (url, init) => fetch(url, { ...init, next: { revalidate: 300 } } as RequestInit),
+})
 
 export interface Post {
   id: string
@@ -12,6 +18,24 @@ export interface Post {
   date: string
   readTime: string
   coverImage: string | null
+}
+
+const NOTION_S3_HOST = 'prod-files-secure.s3.us-west-2.amazonaws.com'
+
+/**
+ * Routes Notion S3 image URLs through the local proxy so they are always
+ * fetched fresh (no-store) regardless of ISR or browser caches.
+ * Non-S3 URLs are returned unchanged.
+ */
+export function notionImageSrc(url: string): string {
+  try {
+    if (new URL(url).hostname === NOTION_S3_HOST) {
+      return `/api/notion-image?src=${encodeURIComponent(url)}`
+    }
+  } catch {
+    // malformed URL — fall through
+  }
+  return url
 }
 
 function getText(richText: Array<{ plain_text: string }>): string {

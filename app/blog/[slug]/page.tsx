@@ -4,7 +4,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
-import { getPost, getPosts } from '@/lib/notion'
+import { getPost, getPosts, notionImageSrc } from '@/lib/notion'
 
 export const revalidate = 300
 
@@ -128,15 +128,16 @@ function renderBlocks(blocks: any[]): React.ReactNode {
         nodes.push(<hr key={block.id} />)
         break
       case 'image': {
-        const url =
+        const rawUrl =
           block.image.type === 'external'
             ? block.image.external.url
             : block.image.file.url
+        const src = notionImageSrc(rawUrl)
         const caption = block.image.caption?.[0]?.plain_text ?? ''
         nodes.push(
           <figure key={block.id} className="post-image">
             <Image
-              src={url}
+              src={src}
               alt={caption}
               width={0}
               height={0}
