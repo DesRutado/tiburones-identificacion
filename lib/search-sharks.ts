@@ -49,6 +49,102 @@ function meaningful(tokens: string[]): string[] {
   return tokens.filter((t) => !STOP_TOKENS.has(t))
 }
 
+// Keys are normalized (no accents). Values use terms the book actually uses.
+// Habitat vocabulary in the book: pacifico, atlantico, indico, tropical,
+// subtropical, arrecife, coral, plataforma, talud, australia, indonesia, filipinas, japon
+const GEO_SYNONYMS: Record<string, string[]> = {
+  // Caribbean / Atlantic Americas
+  belice:      ['atlantico', 'tropical', 'arrecife', 'coral', 'plataforma'],
+  caribe:      ['atlantico', 'tropical', 'arrecife', 'coral'],
+  cuba:        ['atlantico', 'tropical', 'arrecife'],
+  bahamas:     ['atlantico', 'tropical', 'arrecife'],
+  jamaica:     ['atlantico', 'tropical', 'arrecife'],
+  haiti:       ['atlantico', 'tropical'],
+  trinidad:    ['atlantico', 'tropical'],
+  barbados:    ['atlantico', 'tropical'],
+  honduras:    ['atlantico', 'tropical', 'arrecife'],
+  nicaragua:   ['atlantico', 'pacifico', 'tropical'],
+  costarica:   ['pacifico', 'atlantico', 'tropical'],
+  panama:      ['pacifico', 'atlantico', 'tropical'],
+  // North / Central America
+  mexico:      ['pacifico', 'atlantico', 'tropical', 'subtropical'],
+  california:  ['pacifico', 'subtropical'],
+  florida:     ['atlantico', 'tropical', 'subtropical'],
+  eeuu:        ['atlantico', 'pacifico', 'subtropical'],
+  usa:         ['atlantico', 'pacifico', 'subtropical'],
+  // South America
+  colombia:    ['pacifico', 'atlantico', 'tropical'],
+  venezuela:   ['atlantico', 'tropical'],
+  brasil:      ['atlantico', 'tropical'],
+  ecuador:     ['pacifico', 'tropical'],
+  peru:        ['pacifico', 'subtropical'],
+  chile:       ['pacifico', 'subtropical'],
+  argentina:   ['atlantico', 'subtropical'],
+  // Atlantic Africa
+  senegal:     ['atlantico', 'tropical'],
+  ghana:       ['atlantico', 'tropical'],
+  nigeria:     ['atlantico', 'tropical'],
+  angola:      ['atlantico', 'tropical'],
+  namibia:     ['atlantico', 'subtropical'],
+  marruecos:   ['atlantico', 'occidental', 'subtropical'],
+  canarias:    ['atlantico', 'subtropical'],
+  // Mediterranean
+  mediterraneo: ['atlantico', 'occidental'],
+  espana:      ['atlantico', 'occidental', 'subtropical'],
+  italia:      ['atlantico', 'occidental'],
+  grecia:      ['atlantico', 'oriental'],
+  turquia:     ['atlantico', 'oriental'],
+  tunez:       ['atlantico', 'occidental'],
+  libia:       ['atlantico', 'oriental'],
+  croacia:     ['atlantico', 'oriental'],
+  // Indo-Pacific
+  indo:        ['indico', 'pacifico', 'tropical'],
+  indopacific: ['indico', 'pacifico', 'tropical'],
+  // Southeast Asia / Pacific
+  indonesia:   ['pacifico', 'indico', 'tropical', 'arrecife', 'coral'],
+  filipinas:   ['pacifico', 'tropical', 'arrecife', 'coral'],
+  malasia:     ['pacifico', 'indico', 'tropical'],
+  tailandia:   ['indico', 'tropical'],
+  vietnam:     ['pacifico', 'tropical'],
+  birmania:    ['indico', 'tropical'],
+  camboya:     ['pacifico', 'tropical'],
+  singapur:    ['pacifico', 'indico', 'tropical'],
+  papua:       ['pacifico', 'tropical', 'coral'],
+  // Australia & Oceania
+  australia:   ['australia', 'pacifico', 'indico', 'tropical', 'coral'],
+  oceania:     ['pacifico', 'tropical'],
+  zelanda:     ['pacifico', 'subtropical'],
+  hawaii:      ['pacifico', 'tropical'],
+  // East Asia
+  japon:       ['pacifico', 'noroccidental'],
+  china:       ['pacifico', 'tropical'],
+  corea:       ['pacifico'],
+  taiwan:      ['pacifico', 'tropical'],
+  // Indian Ocean
+  india:       ['indico', 'tropical'],
+  maldivas:    ['indico', 'tropical', 'arrecife'],
+  srilanka:    ['indico', 'tropical'],
+  madagascar:  ['indico', 'tropical'],
+  mozambique:  ['indico', 'tropical'],
+  sudafrica:   ['indico', 'atlantico', 'subtropical'],
+  kenia:       ['indico', 'tropical'],
+  tanzania:    ['indico', 'tropical'],
+  somalia:     ['indico', 'tropical'],
+  oman:        ['indico', 'tropical'],
+  yemen:       ['indico', 'tropical'],
+  pakistan:    ['indico', 'tropical'],
+  // Red Sea / Arabian
+  egipto:      ['indico', 'tropical'],
+  arabia:      ['indico', 'tropical'],
+  // Ocean basins typed directly
+  pacifico:    ['pacifico'],
+  atlantico:   ['atlantico'],
+  indico:      ['indico'],
+}
+
+// Minimum results to return when geographic expansion is applied
+const GEO_LIMIT = 15
+
 function scoreShark(shark: Shark, queryTokens: string[]): number {
   if (!queryTokens.length) return 0
 
@@ -77,15 +173,32 @@ function scoreShark(shark: Shark, queryTokens: string[]): number {
 
 export function searchSharks(query: string, limit = 5): Shark[] {
   const sharks = loadSharks()
-  const tokens = meaningful(tokenize(query))
+  const rawTokens = meaningful(tokenize(query))
+
+  // Expand geographic synonyms
+  let geoExpanded = false
+  const extraTokens: string[] = []
+  for (const token of rawTokens) {
+    const syns = GEO_SYNONYMS[token]
+    if (syns) {
+      extraTokens.push(...syns)
+      geoExpanded = true
+    }
+  }
+
+  const tokens = geoExpanded
+    ? [...new Set([...rawTokens, ...extraTokens])]
+    : rawTokens
 
   if (!tokens.length) return []
+
+  const effectiveLimit = geoExpanded ? Math.max(limit, GEO_LIMIT) : limit
 
   const scored = sharks
     .map((s) => ({ shark: s, score: scoreShark(s, tokens) }))
     .filter(({ score }) => score > 0)
     .sort((a, b) => b.score - a.score)
-    .slice(0, limit)
+    .slice(0, effectiveLimit)
 
   return scored.map(({ shark }) => shark)
 }
