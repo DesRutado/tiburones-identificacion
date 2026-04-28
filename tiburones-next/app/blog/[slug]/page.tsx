@@ -4,7 +4,9 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
+import CommentSection from '@/components/CommentSection'
 import { getPost, getPosts } from '@/lib/notion'
+import { getComments } from '@/app/actions/comments'
 
 export const revalidate = 300
 
@@ -169,7 +171,7 @@ function formatDate(iso: string): string {
 
 export default async function PostPage({ params }: PageProps) {
   const { slug } = await params
-  const data = await getPost(slug)
+  const [data, comments] = await Promise.all([getPost(slug), getComments(slug)])
   if (!data) notFound()
 
   const { post, blocks } = data
@@ -198,6 +200,7 @@ export default async function PostPage({ params }: PageProps) {
           </Link>
           {renderBlocks(blocks)}
         </article>
+        <CommentSection slug={slug} initialComments={comments} />
       </div>
 
       <Footer />

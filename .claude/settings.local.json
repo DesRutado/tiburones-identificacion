@@ -1,7 +1,19 @@
 {
   "permissions": {
     "allow": [
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(git push *)",
+      "Bash(python *)",
+      "Bash(git commit *)",
+      "Bash(python3 *)",
+      "Bash(node -e ' *)",
+      "Bash(node --experimental-vm-modules -e \"console.log\\('need tsx'\\)\")",
+      "Bash(npx tsx *)",
+      "Bash(npm run *)",
+      "Bash(npx tsc *)",
+      "Bash(npm install *)"
     ]
   }
 }
