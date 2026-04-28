@@ -1219,21 +1219,21 @@ footer {
 }
 .comments-submit {
   font-family: var(--font-dm-mono), monospace;
-  font-size: 0.7rem;
+  font-size: 0.75rem;
   letter-spacing: 0.2em;
   text-transform: uppercase;
-  padding: 0.85rem 2rem;
-  background: var(--ocean-deep);
-  color: var(--cream-light);
-  border: 1px solid var(--ocean-deep);
+  padding: 1rem 2.5rem;
+  background: var(--slate);
+  color: var(--ocean-deep);
+  border: 1px solid var(--slate);
   cursor: pointer;
   border-radius: 2px;
-  transition: background 0.2s, color 0.2s;
+  transition: all 0.3s;
   align-self: flex-start;
 }
 .comments-submit:hover:not(:disabled) {
-  background: var(--ocean-mid);
-  border-color: var(--ocean-mid);
+  background: transparent;
+  color: var(--slate);
 }
 .comments-submit:disabled {
   opacity: 0.5;
