@@ -19,10 +19,34 @@ function getText(richText: Array<{ plain_text: string }>): string {
   return richText.map((t) => t.plain_text).join('')
 }
 
-function extractCoverImage(props: Record<string, any>): string | null {
-  const file = props.CoverImage?.files?.[0]
-  if (!file) return null
-  return file.type === 'external' ? file.external.url : file.file?.url ?? null
+function extractCoverImage(page: PageObjectResponse): string | null {
+  // 1. Notion built-in page cover
+  if (page.cover) {
+    if (page.cover.type === 'external') return page.cover.external.url
+    if (page.cover.type === 'file') return page.cover.file.url
+  }
+
+  // 2. Database property — try common name casings
+  const props = page.properties as Record<string, any>
+  const prop =
+    props.coverImage ??
+    props.CoverImage ??
+    props['Cover Image'] ??
+    props.cover_image
+
+  if (!prop) return null
+
+  // Files & media type
+  const file = prop.files?.[0]
+  if (file) return file.type === 'external' ? file.external.url : file.file?.url ?? null
+
+  // URL type
+  if (prop.type === 'url' && prop.url) return prop.url
+
+  // Rich text with a URL pasted in
+  if (prop.type === 'rich_text') return prop.rich_text?.[0]?.plain_text ?? null
+
+  return null
 }
 
 function extractPost(page: PageObjectResponse): Post {
@@ -35,7 +59,7 @@ function extractPost(page: PageObjectResponse): Post {
     category: props.Category?.select?.name ?? '',
     date: props.Date?.date?.start ?? '',
     readTime: getText(props.ReadTime?.rich_text ?? []),
-    coverImage: extractCoverImage(props),
+    coverImage: extractCoverImage(page),
     featured: props.Featured?.checkbox ?? false,
   }
 }
