@@ -23,6 +23,8 @@ export const metadata: Metadata = {
 
 export default async function HomePage() {
   const latestPosts = (await getPosts()).slice(0, 3)
+  const featuredPost = latestPosts[0]
+  const secondaryPosts = latestPosts.slice(1)
 
   return (
     <>
@@ -70,6 +72,71 @@ export default async function HomePage() {
           <div className="scroll-line" />
         </div>
       </section>
+
+      {/* ── Blog preview ──────────────────────────────── */}
+      {latestPosts.length > 0 && (
+        <section className="section-blog-preview">
+          <div className="inner">
+            <div className="section-header">
+              <span className="section-label">Del blog</span>
+              <h2 className="section-title">Últimos artículos</h2>
+            </div>
+            <div className="blog-preview-layout">
+
+              {/* Featured — most recent */}
+              {featuredPost && (
+                <Link
+                  href={`/blog/${featuredPost.slug}`}
+                  className="blog-preview-featured"
+                  style={{ '--category-color': getCategoryColor(featuredPost.category) } as React.CSSProperties}
+                >
+                  <div className="blog-preview-featured-visual">
+                    {featuredPost.coverImage ? (
+                      // eslint-disable-next-line @next/next/no-img-element
+                      <img src={featuredPost.coverImage} alt={featuredPost.title} />
+                    ) : (
+                      featuredPost.category && (
+                        <span className="post-category-watermark">{featuredPost.category}</span>
+                      )
+                    )}
+                  </div>
+                  <div className="blog-preview-featured-body">
+                    {featuredPost.category && <span className="post-tag">{featuredPost.category}</span>}
+                    <h3 className="blog-preview-featured-title">{featuredPost.title}</h3>
+                    <p className="blog-preview-featured-excerpt">{featuredPost.excerpt}</p>
+                    <span className="read-more">Leer artículo</span>
+                  </div>
+                </Link>
+              )}
+
+              {/* Secondary — two smaller cards */}
+              {secondaryPosts.length > 0 && (
+                <div className="blog-preview-secondary">
+                  {secondaryPosts.map(post => (
+                    <Link
+                      key={post.id}
+                      href={`/blog/${post.slug}`}
+                      className="blog-preview-mini"
+                      style={{ '--category-color': getCategoryColor(post.category) } as React.CSSProperties}
+                    >
+                      <div className="blog-preview-mini-visual" />
+                      <div className="blog-preview-mini-body">
+                        {post.category && <span className="post-tag">{post.category}</span>}
+                        <h3 className="blog-preview-mini-title">{post.title}</h3>
+                        <p className="blog-preview-mini-excerpt">{post.excerpt}</p>
+                      </div>
+                    </Link>
+                  ))}
+                </div>
+              )}
+
+            </div>
+            <div className="blog-preview-footer">
+              <Link href="/blog" className="read-more">Ver todos los artículos</Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── El libro ──────────────────────────────────── */}
       <section className="section-about" id="libro">
@@ -238,39 +305,6 @@ export default async function HomePage() {
           </a>
         </div>
       </section>
-
-      {/* ── Blog preview ──────────────────────────────── */}
-      {latestPosts.length > 0 && (
-        <section className="section-blog-preview">
-          <div className="inner">
-            <div className="section-header">
-              <span className="section-label">Del blog</span>
-              <h2 className="section-title">Últimos artículos</h2>
-            </div>
-            <div className="blog-preview-grid">
-              {latestPosts.map(post => (
-                <Link
-                  key={post.id}
-                  href={`/blog/${post.slug}`}
-                  className="blog-preview-card"
-                  style={{ '--category-color': getCategoryColor(post.category) } as React.CSSProperties}
-                >
-                  <div className="blog-preview-visual" />
-                  <div className="blog-preview-body">
-                    {post.category && <span className="post-tag">{post.category}</span>}
-                    <h3 className="blog-preview-title">{post.title}</h3>
-                    <p className="blog-preview-excerpt">{post.excerpt}</p>
-                    <span className="read-more">Leer artículo</span>
-                  </div>
-                </Link>
-              ))}
-            </div>
-            <div className="blog-preview-footer">
-              <Link href="/blog" className="read-more">Ver todos los artículos</Link>
-            </div>
-          </div>
-        </section>
-      )}
 
       {/* ── CTA Final ─────────────────────────────────── */}
       <section className="section-cta" id="adquirir">
