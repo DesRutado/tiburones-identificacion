@@ -5,6 +5,7 @@ import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import HeroWaves from '@/components/HeroWaves'
 import { getPosts, type Post } from '@/lib/notion'
+import { getCategoryColor } from '@/lib/categories'
 
 export const revalidate = 300
 
@@ -28,20 +29,10 @@ function formatDate(iso: string): string {
   })
 }
 
-function PostCardVisualIcon() {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1">
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 3c-2.5 4-2.5 14 0 18" />
-      <path d="M12 3c2.5 4 2.5 14 0 18" />
-      <line x1="3" y1="12" x2="21" y2="12" />
-    </svg>
-  )
-}
-
 function FeaturedPost({ post }: { post: Post }) {
+  const categoryColor = getCategoryColor(post.category)
   return (
-    <article className="post-featured">
+    <Link href={`/blog/${post.slug}`} className="post-featured">
       <div className="post-featured-visual">
         {post.coverImage ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -51,15 +42,14 @@ function FeaturedPost({ post }: { post: Post }) {
             style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
           />
         ) : (
-          <svg viewBox="0 0 600 400" xmlns="http://www.w3.org/2000/svg">
-            <rect width="600" height="400" fill="#1e3d50" />
-            <g opacity="0.15">
-              <path d="M-30,220 Q30,180 90,220 Q150,260 210,220 Q270,180 330,220 Q390,260 450,220 Q510,180 570,220 Q630,260 690,220 L690,400 L-30,400 Z" fill="#4a8e8e" />
-              <path d="M-30,260 Q30,220 90,260 Q150,300 210,260 Q270,220 330,260 Q390,300 450,260 Q510,220 570,260 L570,400 L-30,400 Z" fill="#2a5060" />
-              <path d="M-30,300 Q30,260 90,300 Q150,340 210,300 Q270,260 330,300 Q390,340 450,300 Q510,260 570,300 L570,400 L-30,400 Z" fill="#1e3040" />
-            </g>
-            <path d="M300,80 C297,110 288,145 272,180 C256,215 238,245 220,268 C240,264 262,262 280,265 C287,266 294,268 300,269 C306,268 313,266 320,265 C338,262 360,264 380,268 C362,245 344,215 328,180 C312,145 303,110 300,80 Z" fill="#3a5566" opacity="0.5" />
-          </svg>
+          <div
+            className="post-featured-fallback"
+            style={{ background: categoryColor }}
+          >
+            {post.category && (
+              <span className="post-category-watermark">{post.category}</span>
+            )}
+          </div>
         )}
       </div>
       <div className="post-featured-body">
@@ -75,17 +65,22 @@ function FeaturedPost({ post }: { post: Post }) {
             </>
           )}
         </div>
-        <Link href={`/blog/${post.slug}`} className="read-more">
-          Leer artículo
-        </Link>
       </div>
-    </article>
+    </Link>
   )
 }
 
 function PostCard({ post, index }: { post: Post; index: number }) {
+  const categoryColor = getCategoryColor(post.category)
   return (
-    <article className="post-card" style={{ '--card-index': index } as React.CSSProperties}>
+    <Link
+      href={`/blog/${post.slug}`}
+      className="post-card"
+      style={{
+        '--card-index': index,
+        '--category-color': categoryColor,
+      } as React.CSSProperties}
+    >
       <div className="post-card-visual">
         {post.coverImage ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -96,7 +91,12 @@ function PostCard({ post, index }: { post: Post; index: number }) {
           />
         ) : (
           <div className="card-visual-icon">
-            <PostCardVisualIcon />
+            <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="1">
+              <circle cx="12" cy="12" r="9" />
+              <path d="M12 3c-2.5 4-2.5 14 0 18" />
+              <path d="M12 3c2.5 4 2.5 14 0 18" />
+              <line x1="3" y1="12" x2="21" y2="12" />
+            </svg>
           </div>
         )}
       </div>
@@ -114,21 +114,23 @@ function PostCard({ post, index }: { post: Post; index: number }) {
               </>
             )}
           </div>
-          <Link href={`/blog/${post.slug}`} className="read-more">
-            Leer
-          </Link>
         </div>
       </div>
-    </article>
+    </Link>
   )
 }
 
 export default async function BlogPage() {
   const posts = await getPosts()
-  const featured = posts[0]
-  const rest = posts.slice(1)
+  const featured = posts.find(p => p.featured) ?? posts[0]
+  const rest = posts.filter(p => p !== featured)
 
-  const recentPosts = posts.slice(0, 4)
+  const categories = Object.entries(
+    posts.reduce((acc, p) => {
+      if (p.category) acc[p.category] = (acc[p.category] || 0) + 1
+      return acc
+    }, {} as Record<string, number>)
+  ).sort((a, b) => b[1] - a[1])
 
   return (
     <>
@@ -156,7 +158,6 @@ export default async function BlogPage() {
             </div>
           ) : (
             <>
-              {/* Columna principal */}
               <div>
                 {featured && <FeaturedPost post={featured} />}
 
@@ -169,7 +170,6 @@ export default async function BlogPage() {
                 )}
               </div>
 
-              {/* Sidebar */}
               <aside className="sidebar">
                 <div className="sidebar-block sidebar-about">
                   <Image src="/img3.webp" alt="Logo Identificación de Tiburones" width={64} height={64} />
@@ -180,14 +180,18 @@ export default async function BlogPage() {
                   </p>
                 </div>
 
-                {recentPosts.length > 0 && (
+                {categories.length >= 2 && (
                   <div className="sidebar-block">
-                    <div className="sidebar-title">Artículos recientes</div>
-                    <div className="sidebar-recent">
-                      {recentPosts.map((post) => (
-                        <Link key={post.id} href={`/blog/${post.slug}`} className="sidebar-recent-item">
-                          <span className="sidebar-recent-title">{post.title}</span>
-                          <span className="sidebar-recent-date">{formatDate(post.date)}</span>
+                    <div className="sidebar-title">Categorías</div>
+                    <div className="sidebar-categories">
+                      {categories.map(([name, count]) => (
+                        <Link
+                          key={name}
+                          href={`/blog?category=${encodeURIComponent(name)}`}
+                          className="sidebar-cat"
+                        >
+                          <span>{name}</span>
+                          <span className="sidebar-cat-count">{count}</span>
                         </Link>
                       ))}
                     </div>

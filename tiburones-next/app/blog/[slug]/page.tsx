@@ -4,8 +4,10 @@ import Image from 'next/image'
 import Link from 'next/link'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
+import HeroWaves from '@/components/HeroWaves'
 import CommentSection from '@/components/CommentSection'
 import { getPost, getPosts } from '@/lib/notion'
+import { getCategoryColor } from '@/lib/categories'
 import { getComments } from '@/app/actions/comments'
 
 export const revalidate = 300
@@ -171,15 +173,26 @@ function formatDate(iso: string): string {
 
 export default async function PostPage({ params }: PageProps) {
   const { slug } = await params
-  const [data, comments] = await Promise.all([getPost(slug), getComments(slug)])
+  const [data, comments, allPosts] = await Promise.all([
+    getPost(slug),
+    getComments(slug),
+    getPosts(),
+  ])
   if (!data) notFound()
 
   const { post, blocks } = data
+
+  const related = allPosts.filter(p => p.slug !== slug && p.category === post.category).slice(0, 2)
+  const nextPosts = related.length >= 2 ? related : allPosts.filter(p => p.slug !== slug).slice(0, 2)
+
   return (
     <>
       <Nav />
 
       <div className="post-header">
+        <div className="post-header-waves">
+          <HeroWaves compact />
+        </div>
         {post.category && <span className="post-header-tag">{post.category}</span>}
         <h1 className="post-header-title">{post.title}</h1>
         <div className="post-header-meta">
@@ -195,13 +208,38 @@ export default async function PostPage({ params }: PageProps) {
 
       <div className="post-body-wrapper">
         <article className="post-content">
+          {renderBlocks(blocks)}
           <Link href="/blog" className="post-back">
             Volver a artículos
           </Link>
-          {renderBlocks(blocks)}
         </article>
         <CommentSection slug={slug} initialComments={comments} />
       </div>
+
+      {nextPosts.length > 0 && (
+        <section className="seguir-leyendo">
+          <div className="seguir-inner">
+            <span className="section-label">Seguir leyendo</span>
+            <div className="seguir-grid">
+              {nextPosts.map(p => (
+                <Link
+                  key={p.id}
+                  href={`/blog/${p.slug}`}
+                  className="seguir-card"
+                  style={{ '--category-color': getCategoryColor(p.category) } as React.CSSProperties}
+                >
+                  <div className="seguir-visual" />
+                  <div className="seguir-body">
+                    {p.category && <span className="post-tag">{p.category}</span>}
+                    <h3 className="seguir-title">{p.title}</h3>
+                    <p className="seguir-excerpt">{p.excerpt}</p>
+                  </div>
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+      )}
 
       <Footer />
     </>

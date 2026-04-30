@@ -1,8 +1,13 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
+import Link from 'next/link'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import HeroWaves from '@/components/HeroWaves'
+import { getPosts } from '@/lib/notion'
+import { getCategoryColor } from '@/lib/categories'
+
+export const revalidate = 300
 
 export const metadata: Metadata = {
   title: 'Identificación de Tiburones',
@@ -16,7 +21,9 @@ export const metadata: Metadata = {
   },
 }
 
-export default function HomePage() {
+export default async function HomePage() {
+  const latestPosts = (await getPosts()).slice(0, 3)
+
   return (
     <>
       <Nav />
@@ -53,9 +60,9 @@ export default function HomePage() {
           <a href="#adquirir" className="btn btn-primary">
             Adquirir el libro
           </a>
-          <a href="#contenido" className="btn btn-secondary">
-            Ver contenido
-          </a>
+          <Link href="/blog" className="btn btn-secondary">
+            Explorar artículos
+          </Link>
         </div>
 
         <div className="scroll-hint">
@@ -231,6 +238,39 @@ export default function HomePage() {
           </a>
         </div>
       </section>
+
+      {/* ── Blog preview ──────────────────────────────── */}
+      {latestPosts.length > 0 && (
+        <section className="section-blog-preview">
+          <div className="inner">
+            <div className="section-header">
+              <span className="section-label">Del blog</span>
+              <h2 className="section-title">Últimos artículos</h2>
+            </div>
+            <div className="blog-preview-grid">
+              {latestPosts.map(post => (
+                <Link
+                  key={post.id}
+                  href={`/blog/${post.slug}`}
+                  className="blog-preview-card"
+                  style={{ '--category-color': getCategoryColor(post.category) } as React.CSSProperties}
+                >
+                  <div className="blog-preview-visual" />
+                  <div className="blog-preview-body">
+                    {post.category && <span className="post-tag">{post.category}</span>}
+                    <h3 className="blog-preview-title">{post.title}</h3>
+                    <p className="blog-preview-excerpt">{post.excerpt}</p>
+                    <span className="read-more">Leer artículo</span>
+                  </div>
+                </Link>
+              ))}
+            </div>
+            <div className="blog-preview-footer">
+              <Link href="/blog" className="read-more">Ver todos los artículos</Link>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* ── CTA Final ─────────────────────────────────── */}
       <section className="section-cta" id="adquirir">

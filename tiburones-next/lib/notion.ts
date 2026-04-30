@@ -12,6 +12,7 @@ export interface Post {
   date: string
   readTime: string
   coverImage: string | null
+  featured: boolean
 }
 
 function getText(richText: Array<{ plain_text: string }>): string {
@@ -35,6 +36,7 @@ function extractPost(page: PageObjectResponse): Post {
     date: props.Date?.date?.start ?? '',
     readTime: getText(props.ReadTime?.rich_text ?? []),
     coverImage: extractCoverImage(props),
+    featured: props.Featured?.checkbox ?? false,
   }
 }
 

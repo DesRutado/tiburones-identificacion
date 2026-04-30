@@ -6,9 +6,9 @@ import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 
 const NAV_LINKS = [
+  { href: '/blog', label: 'Blog' },
   { href: '/#libro', label: 'El Libro' },
   { href: '/#contenido', label: 'Contenido' },
-  { href: '/blog', label: 'Blog' },
   { href: '/#autor', label: 'Autor' },
   { href: '/#adquirir', label: 'Adquirir' },
 ]
