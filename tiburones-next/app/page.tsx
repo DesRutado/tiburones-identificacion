@@ -93,7 +93,11 @@ export default async function HomePage() {
                   <div className="blog-preview-featured-visual">
                     {featuredPost.coverImage ? (
                       // eslint-disable-next-line @next/next/no-img-element
-                      <img src={featuredPost.coverImage} alt={featuredPost.title} />
+                      <img
+                        src={featuredPost.coverImage}
+                        alt={featuredPost.title}
+                        style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
+                      />
                     ) : (
                       featuredPost.category && (
                         <span className="post-category-watermark">{featuredPost.category}</span>
@@ -119,7 +123,16 @@ export default async function HomePage() {
                       className="blog-preview-mini"
                       style={{ '--category-color': getCategoryColor(post.category) } as React.CSSProperties}
                     >
-                      <div className="blog-preview-mini-visual" />
+                      <div className="blog-preview-mini-visual">
+                        {post.coverImage && (
+                          // eslint-disable-next-line @next/next/no-img-element
+                          <img
+                            src={post.coverImage}
+                            alt={post.title}
+                            style={{ width: '100%', height: '100%', objectFit: 'cover', position: 'absolute', inset: 0 }}
+                          />
+                        )}
+                      </div>
                       <div className="blog-preview-mini-body">
                         {post.category && <span className="post-tag">{post.category}</span>}
                         <h3 className="blog-preview-mini-title">{post.title}</h3>

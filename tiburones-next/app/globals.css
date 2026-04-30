@@ -1258,6 +1258,8 @@ footer {
   background: var(--category-color, var(--ocean-deep));
   flex-shrink: 0;
   opacity: 0.7;
+  position: relative;
+  overflow: hidden;
 }
 .blog-preview-mini-body {
   padding: 1.2rem 1.4rem;
