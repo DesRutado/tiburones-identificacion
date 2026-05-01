@@ -5,6 +5,10 @@ import { searchSharks, sharkToContext } from '@/lib/search-sharks'
 const client = new Anthropic({ apiKey: process.env.ANTHROPIC_API_KEY })
 
 export async function POST(req: NextRequest) {
+  if (process.env.NEXT_PUBLIC_CHATBOT_ENABLED !== 'true') {
+    return NextResponse.json({ error: 'Not found' }, { status: 404 })
+  }
+
   const body = await req.json().catch(() => null)
   const question: string = body?.question?.trim() ?? ''
 
