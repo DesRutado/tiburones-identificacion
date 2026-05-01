@@ -175,11 +175,7 @@ export default function CommentSection({ slug, initialComments }: Props) {
         </div>
 
         {state.error && <p className="comments-error">{state.error}</p>}
-        {state.success && (
-          <p className="comments-success">
-            Tu comentario está pendiente de revisión y se publicará en breve.
-          </p>
-        )}
+        {state.success && <p className="comments-success">¡Comentario publicado!</p>}
 
         <button type="submit" disabled={pending} className="comments-submit">
           {pending ? 'Enviando...' : 'Publicar comentario'}

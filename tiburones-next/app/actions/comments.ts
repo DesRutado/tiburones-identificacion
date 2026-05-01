@@ -48,7 +48,9 @@ export async function submitComment(
     return { success: false, error: 'El comentario es demasiado largo (máx. 2000 caracteres).' }
   }
 
-  const { error } = await supabase.from('comments').insert({ article_slug: slug, name, comment })
+  const { error } = await supabase
+    .from('comments')
+    .insert({ article_slug: slug, name, comment, approved: true })
 
   if (error) return { success: false, error: 'Error al guardar el comentario. Inténtalo de nuevo.' }
 
@@ -77,7 +79,7 @@ export async function submitReply(
 
   const { error } = await supabase
     .from('comments')
-    .insert({ article_slug: slug, name, comment, parent_id: parentId })
+    .insert({ article_slug: slug, name, comment, parent_id: parentId, approved: true })
 
   if (error) return { success: false, error: 'Error al guardar la respuesta. Inténtalo de nuevo.' }
 
