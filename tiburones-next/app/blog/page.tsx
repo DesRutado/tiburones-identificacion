@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import Image from 'next/image'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import HeroWaves from '@/components/HeroWaves'
@@ -171,15 +170,6 @@ export default async function BlogPage() {
               </div>
 
               <aside className="sidebar">
-                <div className="sidebar-block sidebar-about">
-                  <Image src="/img3.webp" alt="Logo Identificación de Tiburones" width={64} height={64} />
-                  <div className="sidebar-about-name">Guillermo Carranza Hidalgo</div>
-                  <p className="sidebar-about-bio">
-                    Naturalista especializado en elasmobranquios. Autor de la guía de identificación
-                    de tiburones más completa en español.
-                  </p>
-                </div>
-
                 {categories.length >= 2 && (
                   <div className="sidebar-block">
                     <div className="sidebar-title">Categorías</div>

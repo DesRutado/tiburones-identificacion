@@ -295,11 +295,12 @@ export default async function HomePage() {
       <section className="section-author" id="autor">
         <div className="inner">
           <Image
-            src="/img3.webp"
-            alt="Logo Identificación de Tiburones"
-            width={72}
-            height={72}
+            src="/imgPerfil.png"
+            alt="Guillermo Carranza Hidalgo"
+            width={120}
+            height={120}
             className="author-avatar"
+            style={{ borderRadius: '50%', objectFit: 'cover' }}
           />
           <div className="author-line" />
           <h2 className="author-name">Guillermo Carranza Hidalgo</h2>
