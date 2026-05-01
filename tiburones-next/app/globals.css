@@ -162,7 +162,7 @@ nav {
 .hero {
   min-height: 100vh;
   display: grid;
-  grid-template-rows: 1fr auto;
+  grid-template-rows: 1fr auto auto;
   position: relative;
   overflow: hidden;
 }
@@ -245,7 +245,7 @@ nav {
   display: flex;
   gap: 1rem;
   justify-content: center;
-  padding: 2rem 2rem 3rem;
+  padding: 2rem 2rem 0;
   animation: fadeUp 1s ease 1s both;
 }
 
@@ -283,10 +283,7 @@ nav {
 
 /* ── Scroll hint ─────────────────────────────────────── */
 .scroll-hint {
-  position: absolute;
-  bottom: 2.5rem;
-  left: 50%;
-  transform: translateX(-50%);
+  position: relative;
   z-index: 10;
   display: flex;
   flex-direction: column;
@@ -295,6 +292,8 @@ nav {
   opacity: 0.65;
   animation: fadeIn 2s ease 1.5s both;
   color: var(--cream-light);
+  padding-bottom: 2.5rem;
+  margin-top: 3rem;
 }
 .scroll-hint span {
   font-family: var(--font-dm-mono), monospace;
@@ -329,13 +328,13 @@ nav {
   color: var(--ocean-deep);
   border-color: var(--slate);
 }
-.btn-primary:hover { background: transparent; color: var(--slate); }
+.btn-primary:hover { background: transparent; color: var(--cream-light); border-color: var(--cream-light); }
 .btn-secondary {
-  background: transparent;
-  color: var(--cream);
-  border-color: rgba(220,230,234,0.25);
+  background: rgba(255,255,255,0.08);
+  color: var(--cream-light);
+  border: 2px solid rgba(255,255,255,0.8);
 }
-.btn-secondary:hover { border-color: var(--cream); }
+.btn-secondary:hover { background: rgba(255,255,255,0.18); border-color: #fff; color: #fff; }
 
 /* ── Section: Libro ──────────────────────────────────── */
 section { position: relative; }
