@@ -54,7 +54,7 @@ function getRichText(richText: any[]): React.ReactNode {
   })
 }
 
-function renderBlocks(blocks: any[]): React.ReactNode {
+function renderBlocks(blocks: any[], postTitle = ''): React.ReactNode {
   const nodes: React.ReactNode[] = []
   let i = 0
 
@@ -141,7 +141,7 @@ function renderBlocks(blocks: any[]): React.ReactNode {
           <figure key={block.id} className="post-image">
             <Image
               src={url}
-              alt={caption}
+              alt={caption || postTitle}
               width={0}
               height={0}
               sizes="(max-width: 720px) 100vw, 720px"
@@ -208,7 +208,7 @@ export default async function PostPage({ params }: PageProps) {
 
       <div className="post-body-wrapper">
         <article className="post-content">
-          {renderBlocks(blocks)}
+          {renderBlocks(blocks, post.title)}
           <Link href="/blog" className="post-back">
             Volver a artículos
           </Link>

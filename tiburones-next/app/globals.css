@@ -613,6 +613,15 @@ footer {
   transition: opacity 0.3s;
 }
 .footer-ig:hover { opacity: 1; }
+.footer-legal {
+  font-family: var(--font-dm-mono), monospace;
+  font-size: 0.6rem;
+  color: var(--slate);
+  text-decoration: none;
+  opacity: 0.4;
+  transition: opacity 0.3s;
+}
+.footer-legal:hover { opacity: 0.8; }
 
 /* ── Blog layout ─────────────────────────────────────── */
 .blog-wrapper {

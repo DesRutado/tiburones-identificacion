@@ -31,6 +31,9 @@ export default function Footer() {
         </svg>
         @identificaciondetiburones
       </a>
+      <Link href="/politica-de-privacidad" className="footer-legal">
+        Política de privacidad
+      </Link>
       <div className="footer-copy">© 2025 Guillermo Carranza Hidalgo</div>
     </footer>
   )

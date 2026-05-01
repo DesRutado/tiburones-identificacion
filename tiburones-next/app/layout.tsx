@@ -34,6 +34,10 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'es_ES',
   },
+  twitter: {
+    card: 'summary_large_image',
+    site: '@identificaciondetiburones',
+  },
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
