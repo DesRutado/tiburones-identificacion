@@ -141,7 +141,7 @@ export default async function BlogPage() {
         <div className="hero-content">
           <p className="hero-eyebrow">Guillermo Carranza Hidalgo</p>
           <h1 className="hero-title">
-            Artículos <em>&amp;</em> Guías
+            Artículos
           </h1>
         </div>
       </section>
