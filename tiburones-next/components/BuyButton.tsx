@@ -8,26 +8,43 @@ interface BuyButtonProps {
 }
 
 export default function BuyButton({ className = 'btn btn-primary', label = 'Comprar libro' }: BuyButtonProps) {
-  const [loading, setLoading] = useState(false)
+  const [status, setStatus] = useState<'idle' | 'loading' | 'error'>('idle')
 
   async function handleClick() {
-    setLoading(true)
+    setStatus('loading')
     try {
       const res = await fetch('/api/checkout', { method: 'POST' })
+      if (!res.ok) {
+        setStatus('error')
+        return
+      }
       const data = await res.json()
       if (data.url) {
         window.location.href = data.url
       } else {
-        setLoading(false)
+        setStatus('error')
       }
     } catch {
-      setLoading(false)
+      setStatus('error')
     }
   }
 
+  if (status === 'error') {
+    return (
+      <span style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.4rem' }}>
+        <button type="button" onClick={handleClick} className={className}>
+          Reintentar
+        </button>
+        <span style={{ fontSize: '0.75rem', opacity: 0.6, color: 'inherit' }}>
+          Error al conectar con el pago. Inténtalo de nuevo.
+        </span>
+      </span>
+    )
+  }
+
   return (
-    <button onClick={handleClick} disabled={loading} className={className}>
-      {loading ? 'Redirigiendo...' : label}
+    <button type="button" onClick={handleClick} disabled={status === 'loading'} className={className}>
+      {status === 'loading' ? 'Redirigiendo...' : label}
     </button>
   )
 }
