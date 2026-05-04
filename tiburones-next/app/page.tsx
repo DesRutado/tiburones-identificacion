@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Nav from '@/components/Nav'
 import Footer from '@/components/Footer'
 import HeroWaves from '@/components/HeroWaves'
+import BuyButton from '@/components/BuyButton'
 import { getPosts } from '@/lib/notion'
 import { getCategoryColor } from '@/lib/categories'
 
@@ -326,9 +327,7 @@ export default async function HomePage() {
         <h2 className="section-title">¿Listo para sumergirte?</h2>
         <p className="cta-sub">La guía de identificación de tiburones más completa en español</p>
         <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center', flexWrap: 'wrap' }}>
-          <a href="#" className="btn btn-primary">
-            Adquirir el libro
-          </a>
+          <BuyButton label="Adquirir el libro" />
           <a
             href="https://instagram.com/identificaciondetiburones"
             className="btn btn-secondary"

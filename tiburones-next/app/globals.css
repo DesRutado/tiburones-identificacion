@@ -1284,6 +1284,34 @@ footer {
 }
 .blog-preview-footer .read-more:hover { border-bottom-color: var(--slate); }
 
+/* ── Gracias (post-pago) ─────────────────────────────── */
+.gracias-content {
+  max-width: 600px;
+  margin: 4rem auto 6rem;
+  text-align: center;
+}
+.gracias-lead {
+  font-family: var(--font-playfair), serif;
+  font-size: clamp(1.4rem, 3vw, 1.9rem);
+  color: var(--text-dark);
+  margin-bottom: 1.5rem;
+  line-height: 1.4;
+}
+.gracias-body {
+  font-family: var(--font-crimson), serif;
+  font-size: 1.15rem;
+  color: var(--text-muted);
+  line-height: 1.7;
+  margin-bottom: 1rem;
+}
+.gracias-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 2.5rem;
+}
+
 /* ── Seguir leyendo (post page) ─────────────────────── */
 .seguir-leyendo {
   background: var(--off-white);
